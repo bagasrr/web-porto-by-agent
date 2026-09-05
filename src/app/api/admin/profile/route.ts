@@ -5,10 +5,23 @@ export async function POST(request: Request) {
   try {
     const data = await request.json()
     const { id, ...updateData } = data
-    
-    const profile = await prisma.profile.update({
+    // Remove fields that shouldn't be manually updated
+    delete updateData.createdAt;
+    delete updateData.updatedAt;
+
+    const profile = await prisma.profile.upsert({
       where: { id: id || 1 },
-      data: updateData
+      update: updateData,
+      create: {
+        id: 1,
+        fullName: updateData.fullName || '',
+        title: updateData.title || '',
+        heroTitle: updateData.heroTitle || '',
+        email: updateData.email || '',
+        phone: updateData.phone || '',
+        linkedin: updateData.linkedin || '',
+        whatsapp: updateData.whatsapp || '',
+      }
     })
     
     return NextResponse.json({ success: true, profile })

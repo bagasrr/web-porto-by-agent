@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/prisma'
 import { NextResponse } from 'next/server'
+import { syncTechStack } from '@/lib/syncTechStack'
 
 export async function POST(request: Request) {
   try {
@@ -7,6 +8,8 @@ export async function POST(request: Request) {
     const techStackArray = Array.isArray(data.techStack) 
       ? data.techStack 
       : data.techStack.split(',').map((t: string) => t.trim()).filter(Boolean)
+
+    await syncTechStack(techStackArray)
 
     const newProject = await prisma.project.create({
       data: {
@@ -31,6 +34,8 @@ export async function PUT(request: Request) {
     const techStackArray = Array.isArray(data.techStack) 
       ? data.techStack 
       : data.techStack.split(',').map((t: string) => t.trim()).filter(Boolean)
+
+    await syncTechStack(techStackArray)
 
     const updatedProject = await prisma.project.update({
       where: { id: parseInt(data.id) },

@@ -3,13 +3,25 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
-export default function AdminDashboard({ initialProfile, initialExperiences, initialProjects }: { initialProfile: any, initialExperiences: any[], initialProjects: any[] }) {
+export default function AdminDashboard({ 
+  initialProfile, 
+  initialExperiences, 
+  initialProjects,
+  initialTechStacks 
+}: { 
+  initialProfile: any, 
+  initialExperiences: any[], 
+  initialProjects: any[],
+  initialTechStacks?: any[]
+}) {
   const [profile, setProfile] = useState(initialProfile || {})
   const [experiences, setExperiences] = useState<any[]>(initialExperiences || [])
   const [projects, setProjects] = useState<any[]>(initialProjects || [])
+  const [techStacks, setTechStacks] = useState<any[]>(initialTechStacks || [])
   
   const [editingExp, setEditingExp] = useState<any | null>(null)
   const [editingProj, setEditingProj] = useState<any | null>(null)
+  const [editingTech, setEditingTech] = useState<any | null>(null)
   
   const [saving, setSaving] = useState(false)
   const [uploading, setUploading] = useState(false)
@@ -49,6 +61,8 @@ export default function AdminDashboard({ initialProfile, initialExperiences, ini
     }
   }
 
+  const [extractedCVData, setExtractedCVData] = useState<any | null>(null)
+
   const uploadCV = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
@@ -71,7 +85,11 @@ export default function AdminDashboard({ initialProfile, initialExperiences, ini
       })
       
       if (res.ok) {
+        const resData = await res.json()
         setMessage({ type: 'success', text: 'CV uploaded successfully!' })
+        if (resData.extractedData && Object.values(resData.extractedData).some(val => val !== null)) {
+          setExtractedCVData(resData.extractedData)
+        }
       } else {
         setMessage({ type: 'error', text: 'Failed to upload CV.' })
       }
@@ -166,6 +184,45 @@ export default function AdminDashboard({ initialProfile, initialExperiences, ini
     }
   }
 
+  // Tech Stack CRUD Handlers
+  const handleTechChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEditingTech({ ...editingTech, [e.target.name]: e.target.value })
+  }
+
+  const saveTechStack = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setSaving(true)
+    setMessage({ type: '', text: '' })
+    
+    const isNew = !editingTech.id
+    
+    try {
+      const res = await fetch('/api/admin/techstack', {
+        method: isNew ? 'POST' : 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(editingTech)
+      })
+      
+      if (res.ok) {
+        const { techStack } = await res.json()
+        if (isNew) {
+          setTechStacks([...techStacks, techStack].sort((a, b) => (a.order || 0) - (b.order || 0)))
+        } else {
+          setTechStacks(techStacks.map(t => t.id === techStack.id ? techStack : t).sort((a, b) => (a.order || 0) - (b.order || 0)))
+        }
+        setEditingTech(null)
+        setMessage({ type: 'success', text: 'Tech Stack saved!' })
+        router.refresh()
+      } else {
+        setMessage({ type: 'error', text: 'Failed to save tech stack.' })
+      }
+    } catch (error) {
+      setMessage({ type: 'error', text: 'An error occurred.' })
+    } finally {
+      setSaving(false)
+    }
+  }
+
   const confirmDelete = async () => {
     if (!deletingId) return
     
@@ -179,6 +236,8 @@ export default function AdminDashboard({ initialProfile, initialExperiences, ini
           setExperiences(experiences.filter(item => item.id !== id))
         } else if (type === 'project') {
           setProjects(projects.filter(item => item.id !== id))
+        } else if (type === 'techstack') {
+          setTechStacks(techStacks.filter(item => item.id !== id))
         }
         setMessage({ type: 'success', text: 'Item deleted.' })
         router.refresh()
@@ -478,12 +537,89 @@ export default function AdminDashboard({ initialProfile, initialExperiences, ini
         </div>
       </div>
 
+      {/* Tech Stack CRUD */}
+      <div className="brutal-border brutal-shadow bg-white p-6 md:p-8">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl font-bold font-[family-name:var(--font-space-mono)]">Tech Stack</h2>
+          {!editingTech && (
+            <button 
+              onClick={() => setEditingTech({ name: '', imageUrl: '', order: 0 })}
+              className="brutal-btn bg-accent-green text-black px-4 py-2 font-bold"
+            >
+              + Add New
+            </button>
+          )}
+        </div>
+
+        {/* Tech Stack Form */}
+        {editingTech && (
+          <div className="mb-8 p-6 bg-gray-50 border-4 border-black border-dashed">
+            <h3 className="text-xl font-bold mb-4">{editingTech.id ? 'Edit Tech Stack' : 'Add New Tech Stack'}</h3>
+            <form onSubmit={saveTechStack} className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block font-bold mb-2">Tech Name</label>
+                  <input type="text" name="name" value={editingTech.name || ''} onChange={handleTechChange} className="w-full p-3 brutal-border focus:bg-accent-yellow outline-none" required />
+                </div>
+                <div>
+                  <label className="block font-bold mb-2">Image URL (Icon)</label>
+                  <input type="text" name="imageUrl" value={editingTech.imageUrl || ''} onChange={handleTechChange} className="w-full p-3 brutal-border focus:bg-accent-yellow outline-none" required />
+                </div>
+              </div>
+
+              <div>
+                <label className="block font-bold mb-2">Sort Order</label>
+                <input type="number" name="order" value={editingTech.order || 0} onChange={handleTechChange} className="w-full p-3 brutal-border focus:bg-accent-yellow outline-none" />
+              </div>
+
+              <div className="flex gap-4 mt-6">
+                <button type="submit" disabled={saving} className="brutal-btn bg-accent-blue text-white font-bold py-2 px-6">
+                  {saving ? 'Saving...' : 'Save Tech Stack'}
+                </button>
+                <button type="button" onClick={() => setEditingTech(null)} className="brutal-btn bg-white font-bold py-2 px-6">
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        )}
+
+        {/* Tech Stack List */}
+        <div className="space-y-4">
+          {techStacks.map(tech => (
+            <div key={tech.id} className="brutal-border p-4 flex flex-col md:flex-row justify-between items-center gap-4 hover:bg-gray-50 transition-colors">
+              <div className="flex items-center gap-4">
+                <img src={tech.imageUrl} alt={tech.name} className="w-8 h-8 object-contain" />
+                <h4 className="font-bold text-lg">{tech.name}</h4>
+              </div>
+              <div className="flex gap-2 shrink-0">
+                <button 
+                  onClick={() => setEditingTech(tech)} 
+                  className="brutal-btn bg-accent-yellow px-3 py-1 text-sm font-bold"
+                >
+                  Edit
+                </button>
+                <button 
+                  onClick={() => setDeletingId(`techstack_${tech.id}`)} 
+                  className="brutal-btn bg-accent-red text-white px-3 py-1 text-sm font-bold"
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          ))}
+          {techStacks.length === 0 && (
+            <p className="text-gray-500 italic">No tech stack added yet.</p>
+          )}
+        </div>
+      </div>
+
       {/* Delete Confirmation Modal */}
       {deletingId !== null && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm px-4">
           <div className="brutal-border brutal-shadow-lg bg-white p-6 max-w-sm w-full">
             <h3 className="text-xl font-bold font-[family-name:var(--font-space-mono)] mb-4">Confirm Deletion</h3>
-            <p className="mb-6">Are you sure you want to delete this {deletingId.startsWith('experience') ? 'work experience' : 'project'}? This cannot be undone.</p>
+            <p className="mb-6">Are you sure you want to delete this {deletingId.startsWith('experience') ? 'work experience' : deletingId.startsWith('project') ? 'project' : 'tech stack'}? This cannot be undone.</p>
             <div className="flex gap-4">
               <button 
                 onClick={confirmDelete}
@@ -496,6 +632,152 @@ export default function AdminDashboard({ initialProfile, initialExperiences, ini
                 className="brutal-btn bg-white flex-1 py-2 font-bold"
               >
                 Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* CV Extraction Modal */}
+      {extractedCVData !== null && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm px-4">
+          <div className="brutal-border brutal-shadow-lg bg-white p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <h3 className="text-xl font-bold font-[family-name:var(--font-space-mono)] mb-4 bg-accent-yellow inline-block px-2 border-2 border-black">Data Extracted!</h3>
+            <p className="mb-4 text-sm font-bold">We found some data in your CV. Would you like to apply it?</p>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+              <div className="space-y-3 bg-gray-50 p-4 brutal-border text-sm">
+                <h4 className="font-bold border-b-2 border-black pb-2 mb-2">Profile Data</h4>
+                {extractedCVData.guessedName && (
+                  <div><span className="font-bold">Name:</span> {extractedCVData.guessedName}</div>
+                )}
+                {extractedCVData.title && (
+                  <div><span className="font-bold">Job Title:</span> {extractedCVData.title}</div>
+                )}
+                {extractedCVData.email && (
+                  <div><span className="font-bold">Email:</span> {extractedCVData.email}</div>
+                )}
+                {extractedCVData.phone && (
+                  <div><span className="font-bold">Phone:</span> {extractedCVData.phone}</div>
+                )}
+                {extractedCVData.linkedin && (
+                  <div><span className="font-bold">LinkedIn:</span> {extractedCVData.linkedin}</div>
+                )}
+                {extractedCVData.heroTitle && (
+                  <div><span className="font-bold">Hero Title:</span> {extractedCVData.heroTitle}</div>
+                )}
+              </div>
+
+              {extractedCVData.experiences && extractedCVData.experiences.length > 0 && (
+                <div className="space-y-3 bg-gray-50 p-4 brutal-border text-sm overflow-y-auto max-h-48">
+                  <h4 className="font-bold border-b-2 border-black pb-2 mb-2">Work Experience ({extractedCVData.experiences.length})</h4>
+                  {extractedCVData.experiences.map((exp: any, i: number) => (
+                    <div key={i} className="mb-2 pb-2 border-b border-gray-300 last:border-0">
+                      <div className="font-bold">{exp.role} @ {exp.company}</div>
+                      <div className="text-xs text-gray-600">{exp.startDate} - {exp.endDate || 'Present'}</div>
+                      <div className="text-xs line-clamp-2 mt-1">{exp.summary}</div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {extractedCVData.projects && extractedCVData.projects.length > 0 && (
+                <div className="space-y-3 bg-gray-50 p-4 brutal-border text-sm overflow-y-auto max-h-48 md:col-span-2">
+                  <h4 className="font-bold border-b-2 border-black pb-2 mb-2">Projects ({extractedCVData.projects.length})</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {extractedCVData.projects.map((proj: any, i: number) => (
+                      <div key={i} className="mb-2 pb-2 border-b md:border-b-0 border-gray-300">
+                        <div className="font-bold">{proj.title}</div>
+                        <div className="text-xs line-clamp-2 mt-1">{proj.description}</div>
+                        {proj.techStack && proj.techStack.length > 0 && (
+                          <div className="text-xs mt-1 text-gray-500">Tech: {proj.techStack.join(', ')}</div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="flex gap-4">
+              <button 
+                onClick={async () => {
+                  setProfile({
+                    ...profile,
+                    ...(extractedCVData.guessedName ? { fullName: extractedCVData.guessedName } : {}),
+                    ...(extractedCVData.title ? { title: extractedCVData.title } : {}),
+                    ...(extractedCVData.email ? { email: extractedCVData.email } : {}),
+                    ...(extractedCVData.phone ? { phone: extractedCVData.phone, whatsapp: extractedCVData.phone } : {}),
+                    ...(extractedCVData.linkedin ? { linkedin: extractedCVData.linkedin } : {}),
+                    ...(extractedCVData.heroTitle ? { heroTitle: extractedCVData.heroTitle } : {}),
+                  });
+                  
+                  let newExperiences = [];
+                  let newProjects = [];
+
+                  // Auto-save experiences if there are any
+                  if (extractedCVData.experiences && extractedCVData.experiences.length > 0) {
+                    setMessage({ type: 'success', text: 'Saving extracted experiences...' });
+                    for (const exp of extractedCVData.experiences) {
+                      const res = await fetch('/api/admin/experience', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(exp)
+                      });
+                      if (res.ok) {
+                        const data = await res.json();
+                        if (data.experience) newExperiences.push(data.experience);
+                      }
+                    }
+                  }
+
+                  // Auto-save projects if there are any
+                  if (extractedCVData.projects && extractedCVData.projects.length > 0) {
+                    setMessage({ type: 'success', text: 'Saving extracted projects...' });
+                    for (const proj of extractedCVData.projects) {
+                      const res = await fetch('/api/admin/project', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                          title: proj.title,
+                          description: proj.description,
+                          techStack: proj.techStack ? proj.techStack.join(', ') : '',
+                          imageUrl: 'https://via.placeholder.com/600x400',
+                          githubUrl: '',
+                          liveUrl: ''
+                        })
+                      });
+                      if (res.ok) {
+                        const data = await res.json();
+                        if (data.project) newProjects.push(data.project);
+                      }
+                    }
+                  }
+
+                  if (newExperiences.length > 0) {
+                    setExperiences(prev => [...prev, ...newExperiences]);
+                  }
+                  
+                  if (newProjects.length > 0) {
+                    setProjects(prev => [...prev, ...newProjects]);
+                  }
+
+                  if (newExperiences.length > 0 || newProjects.length > 0) {
+                    router.refresh();
+                  }
+
+                  setExtractedCVData(null);
+                  setMessage({ type: 'success', text: 'Data applied! Experiences & Projects saved. Click "Save Changes" to save profile.' })
+                }}
+                className="brutal-btn bg-accent-green text-black flex-1 py-2 font-bold"
+              >
+                Apply Data
+              </button>
+              <button 
+                onClick={() => setExtractedCVData(null)}
+                className="brutal-btn bg-white flex-1 py-2 font-bold"
+              >
+                Ignore
               </button>
             </div>
           </div>

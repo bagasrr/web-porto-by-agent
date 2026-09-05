@@ -1,12 +1,12 @@
 @import "tailwindcss";
 
 @theme inline {
-  --color-background: #F4F4F0;
+  --color-background: #f4f4f0;
   --color-foreground: #111111;
-  --color-accent-yellow: #FFE873;
-  --color-accent-red: #FF6B6B;
-  --color-accent-blue: #99C2FF;
-  --color-accent-green: #A3E6B5;
+  --color-accent-yellow: #ffe873;
+  --color-accent-red: #ff6b6b;
+  --color-accent-blue: #99c2ff;
+  --color-accent-green: #a3e6b5;
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
@@ -44,4 +44,17 @@ body {
 .brutal-btn:active {
   transform: translate(4px, 4px);
   box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 1);
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 50s linear infinite;
 }

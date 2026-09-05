@@ -9,6 +9,9 @@ export default async function AdminPage() {
   const projects = await prisma.project.findMany({
     orderBy: { order: 'asc' }
   })
+  const techStacks = await prisma.techStack.findMany({
+    orderBy: { order: 'asc' }
+  })
   
   return (
     <div className="max-w-4xl mx-auto">
@@ -21,7 +24,12 @@ export default async function AdminPage() {
       </div>
       
       {/* Client Component for interactive forms */}
-      <AdminDashboard initialProfile={profile} initialExperiences={experiences} initialProjects={projects} />
+      <AdminDashboard 
+        initialProfile={profile} 
+        initialExperiences={experiences} 
+        initialProjects={projects} 
+        initialTechStacks={techStacks}
+      />
     </div>
   )
 }
