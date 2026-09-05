@@ -21,6 +21,7 @@ export async function POST(request: Request) {
         phone: updateData.phone || '',
         linkedin: updateData.linkedin || '',
         whatsapp: updateData.whatsapp || '',
+        theme: updateData.theme || 'light-1',
       }
     })
     

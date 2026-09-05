@@ -32,7 +32,7 @@ export default function AdminDashboard({
   
   const router = useRouter()
 
-  const handleProfileChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleProfileChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setProfile({ ...profile, [e.target.name]: e.target.value })
   }
 
@@ -275,7 +275,7 @@ export default function AdminDashboard({
       )}
 
       {/* CV Upload Section */}
-      <div className="brutal-border brutal-shadow bg-white p-6 md:p-8">
+      <div className="brutal-border brutal-shadow bg-card-bg p-6 md:p-8">
         <h2 className="text-2xl font-bold font-[family-name:var(--font-space-mono)] mb-4">Upload CV (PDF)</h2>
         <div className="flex items-center gap-4">
           <input 
@@ -283,11 +283,11 @@ export default function AdminDashboard({
             accept="application/pdf"
             onChange={uploadCV}
             disabled={uploading}
-            className="block w-full text-sm text-gray-500
+            className="block w-full text-sm opacity-75
               file:mr-4 file:py-2 file:px-4
               file:border-4 file:border-black
               file:text-sm file:font-bold
-              file:bg-accent-yellow file:text-black
+              file:bg-accent-yellow file:text-\[#111\]
               hover:file:bg-accent-blue hover:file:text-white
               file:cursor-pointer file:transition-colors"
           />
@@ -296,7 +296,7 @@ export default function AdminDashboard({
       </div>
 
       {/* Profile Form */}
-      <div className="brutal-border brutal-shadow bg-white p-6 md:p-8">
+      <div className="brutal-border brutal-shadow bg-card-bg p-6 md:p-8">
         <h2 className="text-2xl font-bold font-[family-name:var(--font-space-mono)] mb-6">Personal Information</h2>
         
         <form onSubmit={saveProfile} className="space-y-4">
@@ -333,6 +333,15 @@ export default function AdminDashboard({
               <label className="block font-bold mb-2">LinkedIn URL</label>
               <input type="url" name="linkedin" value={profile.linkedin || ''} onChange={handleProfileChange} className="w-full p-3 brutal-border focus:bg-accent-yellow outline-none" />
             </div>
+            <div>
+              <label className="block font-bold mb-2">Website Theme</label>
+              <select name="theme" value={profile.theme || 'light-1'} onChange={handleProfileChange} className="w-full p-3 brutal-border focus:bg-accent-yellow outline-none">
+                <option value="light-1">Light Theme 1 (Brutalism)</option>
+                <option value="light-2">Light Theme 2 (Soft Maroon)</option>
+                <option value="dark-1">Dark Theme 1 (Sleek Zinc)</option>
+                <option value="dark-2">Dark Theme 2 (Midnight Burgundy)</option>
+              </select>
+            </div>
           </div>
 
           <button type="submit" disabled={saving} className="brutal-btn bg-accent-blue text-white font-bold py-3 px-8 mt-6 text-lg">
@@ -342,13 +351,13 @@ export default function AdminDashboard({
       </div>
 
       {/* Work Experience CRUD */}
-      <div className="brutal-border brutal-shadow bg-white p-6 md:p-8">
+      <div className="brutal-border brutal-shadow bg-card-bg p-6 md:p-8">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold font-[family-name:var(--font-space-mono)]">Work Experience</h2>
           {!editingExp && (
             <button 
               onClick={() => setEditingExp({ company: '', role: '', startDate: '', endDate: '', summary: '', description: '', techStack: '' })}
-              className="brutal-btn bg-accent-green text-black px-4 py-2 font-bold"
+              className="brutal-btn bg-accent-green text-\[#111\] px-4 py-2 font-bold"
             >
               + Add New
             </button>
@@ -401,7 +410,7 @@ export default function AdminDashboard({
                 <button type="submit" disabled={saving} className="brutal-btn bg-accent-blue text-white font-bold py-2 px-6">
                   {saving ? 'Saving...' : 'Save Experience'}
                 </button>
-                <button type="button" onClick={() => setEditingExp(null)} className="brutal-btn bg-white font-bold py-2 px-6">
+                <button type="button" onClick={() => setEditingExp(null)} className="brutal-btn bg-card-bg font-bold py-2 px-6">
                   Cancel
                 </button>
               </div>
@@ -415,7 +424,7 @@ export default function AdminDashboard({
             <div key={exp.id} className="brutal-border p-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 hover:bg-gray-50 transition-colors">
               <div>
                 <h4 className="font-bold text-lg">{exp.role} <span className="text-accent-red">@ {exp.company}</span></h4>
-                <p className="text-sm text-gray-600">{new Date(exp.startDate).getFullYear()} - {exp.endDate ? new Date(exp.endDate).getFullYear() : 'Present'}</p>
+                <p className="text-sm opacity-75">{new Date(exp.startDate).getFullYear()} - {exp.endDate ? new Date(exp.endDate).getFullYear() : 'Present'}</p>
               </div>
               <div className="flex gap-2">
                 <button 
@@ -434,19 +443,19 @@ export default function AdminDashboard({
             </div>
           ))}
           {experiences.length === 0 && (
-            <p className="text-gray-500 italic">No work experiences added yet.</p>
+            <p className="opacity-75 italic">No work experiences added yet.</p>
           )}
         </div>
       </div>
 
       {/* Projects CRUD */}
-      <div className="brutal-border brutal-shadow bg-white p-6 md:p-8">
+      <div className="brutal-border brutal-shadow bg-card-bg p-6 md:p-8">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold font-[family-name:var(--font-space-mono)]">Projects</h2>
           {!editingProj && (
             <button 
               onClick={() => setEditingProj({ title: '', description: '', techStack: '', githubUrl: '', demoUrl: '', imageUrl: '', order: 0 })}
-              className="brutal-btn bg-accent-green text-black px-4 py-2 font-bold"
+              className="brutal-btn bg-accent-green text-\[#111\] px-4 py-2 font-bold"
             >
               + Add New
             </button>
@@ -499,7 +508,7 @@ export default function AdminDashboard({
                 <button type="submit" disabled={saving} className="brutal-btn bg-accent-blue text-white font-bold py-2 px-6">
                   {saving ? 'Saving...' : 'Save Project'}
                 </button>
-                <button type="button" onClick={() => setEditingProj(null)} className="brutal-btn bg-white font-bold py-2 px-6">
+                <button type="button" onClick={() => setEditingProj(null)} className="brutal-btn bg-card-bg font-bold py-2 px-6">
                   Cancel
                 </button>
               </div>
@@ -513,7 +522,7 @@ export default function AdminDashboard({
             <div key={proj.id} className="brutal-border p-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 hover:bg-gray-50 transition-colors">
               <div>
                 <h4 className="font-bold text-lg">{proj.title}</h4>
-                <p className="text-sm text-gray-600 line-clamp-1">{proj.description}</p>
+                <p className="text-sm opacity-75 line-clamp-1">{proj.description}</p>
               </div>
               <div className="flex gap-2 shrink-0">
                 <button 
@@ -532,19 +541,19 @@ export default function AdminDashboard({
             </div>
           ))}
           {projects.length === 0 && (
-            <p className="text-gray-500 italic">No projects added yet.</p>
+            <p className="opacity-75 italic">No projects added yet.</p>
           )}
         </div>
       </div>
 
       {/* Tech Stack CRUD */}
-      <div className="brutal-border brutal-shadow bg-white p-6 md:p-8">
+      <div className="brutal-border brutal-shadow bg-card-bg p-6 md:p-8">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold font-[family-name:var(--font-space-mono)]">Tech Stack</h2>
           {!editingTech && (
             <button 
               onClick={() => setEditingTech({ name: '', imageUrl: '', order: 0 })}
-              className="brutal-btn bg-accent-green text-black px-4 py-2 font-bold"
+              className="brutal-btn bg-accent-green text-\[#111\] px-4 py-2 font-bold"
             >
               + Add New
             </button>
@@ -576,7 +585,7 @@ export default function AdminDashboard({
                 <button type="submit" disabled={saving} className="brutal-btn bg-accent-blue text-white font-bold py-2 px-6">
                   {saving ? 'Saving...' : 'Save Tech Stack'}
                 </button>
-                <button type="button" onClick={() => setEditingTech(null)} className="brutal-btn bg-white font-bold py-2 px-6">
+                <button type="button" onClick={() => setEditingTech(null)} className="brutal-btn bg-card-bg font-bold py-2 px-6">
                   Cancel
                 </button>
               </div>
@@ -609,7 +618,7 @@ export default function AdminDashboard({
             </div>
           ))}
           {techStacks.length === 0 && (
-            <p className="text-gray-500 italic">No tech stack added yet.</p>
+            <p className="opacity-75 italic">No tech stack added yet.</p>
           )}
         </div>
       </div>
@@ -617,7 +626,7 @@ export default function AdminDashboard({
       {/* Delete Confirmation Modal */}
       {deletingId !== null && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm px-4">
-          <div className="brutal-border brutal-shadow-lg bg-white p-6 max-w-sm w-full">
+          <div className="brutal-border brutal-shadow-lg bg-card-bg p-6 max-w-sm w-full">
             <h3 className="text-xl font-bold font-[family-name:var(--font-space-mono)] mb-4">Confirm Deletion</h3>
             <p className="mb-6">Are you sure you want to delete this {deletingId.startsWith('experience') ? 'work experience' : deletingId.startsWith('project') ? 'project' : 'tech stack'}? This cannot be undone.</p>
             <div className="flex gap-4">
@@ -629,7 +638,7 @@ export default function AdminDashboard({
               </button>
               <button 
                 onClick={() => setDeletingId(null)}
-                className="brutal-btn bg-white flex-1 py-2 font-bold"
+                className="brutal-btn bg-card-bg flex-1 py-2 font-bold"
               >
                 Cancel
               </button>
@@ -641,7 +650,7 @@ export default function AdminDashboard({
       {/* CV Extraction Modal */}
       {extractedCVData !== null && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm px-4">
-          <div className="brutal-border brutal-shadow-lg bg-white p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="brutal-border brutal-shadow-lg bg-card-bg p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             <h3 className="text-xl font-bold font-[family-name:var(--font-space-mono)] mb-4 bg-accent-yellow inline-block px-2 border-2 border-black">Data Extracted!</h3>
             <p className="mb-4 text-sm font-bold">We found some data in your CV. Would you like to apply it?</p>
             
@@ -674,7 +683,7 @@ export default function AdminDashboard({
                   {extractedCVData.experiences.map((exp: any, i: number) => (
                     <div key={i} className="mb-2 pb-2 border-b border-gray-300 last:border-0">
                       <div className="font-bold">{exp.role} @ {exp.company}</div>
-                      <div className="text-xs text-gray-600">{exp.startDate} - {exp.endDate || 'Present'}</div>
+                      <div className="text-xs opacity-75">{exp.startDate} - {exp.endDate || 'Present'}</div>
                       <div className="text-xs line-clamp-2 mt-1">{exp.summary}</div>
                     </div>
                   ))}
@@ -690,7 +699,7 @@ export default function AdminDashboard({
                         <div className="font-bold">{proj.title}</div>
                         <div className="text-xs line-clamp-2 mt-1">{proj.description}</div>
                         {proj.techStack && proj.techStack.length > 0 && (
-                          <div className="text-xs mt-1 text-gray-500">Tech: {proj.techStack.join(', ')}</div>
+                          <div className="text-xs mt-1 opacity-75">Tech: {proj.techStack.join(', ')}</div>
                         )}
                       </div>
                     ))}
@@ -769,13 +778,13 @@ export default function AdminDashboard({
                   setExtractedCVData(null);
                   setMessage({ type: 'success', text: 'Data applied! Experiences & Projects saved. Click "Save Changes" to save profile.' })
                 }}
-                className="brutal-btn bg-accent-green text-black flex-1 py-2 font-bold"
+                className="brutal-btn bg-accent-green text-\[#111\] flex-1 py-2 font-bold"
               >
                 Apply Data
               </button>
               <button 
                 onClick={() => setExtractedCVData(null)}
-                className="brutal-btn bg-white flex-1 py-2 font-bold"
+                className="brutal-btn bg-card-bg flex-1 py-2 font-bold"
               >
                 Ignore
               </button>

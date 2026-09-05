@@ -16,6 +16,7 @@ model Profile {
   linkedin  String
   whatsapp  String
   cvUrl     String?
+  theme     String   @default("light-1")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

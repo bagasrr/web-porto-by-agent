@@ -17,7 +17,7 @@ export default async function HeroSection() {
           <h1 className="text-4xl md:text-3xl lg:text-4xl font-bold font-[family-name:var(--font-space-mono)] leading-tight">{profile?.heroTitle || "I Build Things For The Web."}</h1>
           <div className="mt-6">
             <p className="text-2xl md:text-3xl font-bold">{profile?.fullName || "Bagas  Ramadhan Rusnadi"}</p>
-            <p className="mt-2 text-lg md:text-xl brutal-btn bg-accent-yellow inline-block px-4 py-2 font-bold">{profile?.title || "Software Engineer"}</p>
+            <p className="mt-2 text-lg md:text-xl brutal-btn bg-accent-yellow text-[#111] inline-block px-4 py-2 font-bold">{profile?.title || "Software Engineer"}</p>
           </div>
         </div>
       </div>

@@ -29,7 +29,7 @@ export default async function ExperienceDetailPage({
         ← Back
       </Link>
 
-      <div className="brutal-border brutal-shadow-lg bg-white p-6 md:p-10">
+      <div className="brutal-border brutal-shadow-lg bg-card-bg p-6 md:p-10">
         <div className="mb-6">
           <h1 className="text-3xl md:text-5xl font-bold font-[family-name:var(--font-space-mono)] mb-2">
             {experience.role}

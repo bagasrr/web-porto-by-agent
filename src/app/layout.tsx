@@ -19,9 +19,14 @@ export const metadata: Metadata = {
   description: "Personal portfolio of Bagas Ramadhan Rusnadi - Software Engineer",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+import { prisma } from '@/lib/prisma'
+
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const profile = await prisma.profile.findFirst()
+  const themeClass = profile?.theme ? `theme-${profile.theme}` : 'theme-light-1'
+
   return (
-    <html lang="en" className={`${spaceMono.variable} ${inter.variable}`}>
+    <html lang="en" className={`${spaceMono.variable} ${inter.variable} ${themeClass}`}>
       <body className="min-h-screen font-[family-name:var(--font-inter)]">
         <Navbar />
         <main>{children}</main>

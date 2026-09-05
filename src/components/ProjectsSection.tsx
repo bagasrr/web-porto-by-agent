@@ -17,7 +17,7 @@ export default async function ProjectsSection() {
         {projects.map((project) => (
           <div
             key={project.id}
-            className="brutal-border brutal-shadow bg-white p-6 flex flex-col justify-between"
+            className="brutal-border brutal-shadow bg-card-bg p-6 flex flex-col justify-between"
           >
             <div>
               <h3 className="text-xl font-bold font-[family-name:var(--font-space-mono)] mb-3">
@@ -28,7 +28,7 @@ export default async function ProjectsSection() {
                 {project.techStack.map((tech) => (
                   <span
                     key={tech}
-                    className="text-xs font-bold bg-accent-yellow px-2 py-1 brutal-border"
+                    className="text-xs font-bold bg-accent-yellow text-[#111] px-2 py-1 brutal-border"
                   >
                     {tech}
                   </span>

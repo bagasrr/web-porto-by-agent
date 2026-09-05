@@ -29,7 +29,7 @@ export default function LoginPage() {
 
   return (
     <div className="flex items-center justify-center min-h-[80vh]">
-      <div className="brutal-border brutal-shadow-lg bg-white p-8 max-w-md w-full">
+      <div className="brutal-border brutal-shadow-lg bg-card-bg p-8 max-w-md w-full">
         <h1 className="text-3xl font-bold font-[family-name:var(--font-space-mono)] mb-6 text-center">Admin Login</h1>
         
         {error && (

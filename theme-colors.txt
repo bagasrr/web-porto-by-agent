@@ -1,0 +1,57 @@
+=== Original Pink Theme (Removed) ===
+Background: #fff0f5 (Lavender Blush)
+Foreground (Text): #2b2b2b
+Accent Yellow: #ffb6c1 (Light Pink)
+Accent Red: #ff69b4 (Hot Pink)
+Accent Blue: #00ced1 (Dark Turquoise)
+Accent Green: #98fb98 (Pale Green)
+Border Color: #2b2b2b
+Shadow Color: rgba(43, 43, 43, 1)
+
+
+=== Light Theme 1 (Original Brutalism) ===
+Background: #f4f4f0
+Card Background: #ffffff
+Foreground (Text): #111111
+Accent Yellow: #ffe873
+Accent Red: #ff6b6b
+Accent Blue: #99c2ff
+Accent Green: #a3e6b5
+Border Color: #000000
+Shadow Color: rgba(0, 0, 0, 1)
+
+
+=== Light Theme 2 (Soft Maroon) ===
+Background: #faf8f5
+Card Background: #ffffff
+Foreground (Text): #3d2323
+Accent Yellow: #d9a05b
+Accent Red: #9e3f3f (Main Maroon)
+Accent Blue: #5b7c99
+Accent Green: #6b8e6b
+Border Color: #3d2323
+Shadow Color: rgba(61, 35, 35, 1)
+
+
+=== Dark Theme 1 (Sleek Zinc) ===
+Background: #18181b
+Card Background: #27272a
+Foreground (Text): #f4f4f5
+Accent Yellow: #fde047
+Accent Red: #f87171
+Accent Blue: #60a5fa
+Accent Green: #4ade80
+Border Color: #a1a1aa
+Shadow Color: #52525b
+
+
+=== Dark Theme 2 (Midnight Burgundy) ===
+Background: #1a1111
+Card Background: #2c1a1a
+Foreground (Text): #f0e6e6
+Accent Yellow: #d4a373
+Accent Red: #a94a4a
+Accent Blue: #6b8296
+Accent Green: #789478
+Border Color: #d1b3b3
+Shadow Color: #4a2c2c
