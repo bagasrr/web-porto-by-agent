@@ -2,70 +2,124 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { HiLockClosed, HiArrowRight } from 'react-icons/hi'
+import Link from 'next/link'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
   const router = useRouter()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
-    
-    const res = await fetch('/api/admin/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password })
-    })
-    
-    if (res.ok) {
-      router.push('/admin')
-      router.refresh()
-    } else {
-      setError('Invalid credentials')
+    setLoading(true)
+
+    try {
+      const res = await fetch('/api/admin/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      })
+
+      if (res.ok) {
+        router.push('/admin')
+        router.refresh()
+      } else {
+        setError('Invalid credentials. Please try again.')
+      }
+    } catch {
+      setError('Something went wrong. Please try again.')
+    } finally {
+      setLoading(false)
     }
   }
 
   return (
-    <div className="flex items-center justify-center min-h-[80vh]">
-      <div className="brutal-border brutal-shadow-lg bg-card-bg p-8 max-w-md w-full">
-        <h1 className="text-3xl font-bold font-[family-name:var(--font-space-mono)] mb-6 text-center">Admin Login</h1>
-        
-        {error && (
-          <div className="bg-accent-red text-white font-bold p-3 mb-4 brutal-border">
-            {error}
-          </div>
-        )}
-        
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block font-bold mb-2">Email</label>
-            <input 
-              type="email" 
-              className="w-full p-3 brutal-border focus:outline-none focus:bg-accent-yellow transition-colors"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </div>
-          <div>
-            <label className="block font-bold mb-2">Password</label>
-            <input 
-              type="password" 
-              className="w-full p-3 brutal-border focus:outline-none focus:bg-accent-yellow transition-colors"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-          </div>
-          <button 
-            type="submit" 
-            className="w-full mt-6 brutal-btn bg-accent-blue text-white py-3 font-bold text-lg"
+    <div className="min-h-screen flex items-center justify-center bg-glow px-4">
+      {/* Background decorative */}
+      <div className="absolute inset-0 pointer-events-none" aria-hidden>
+        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-[var(--glow-primary)] rounded-full blur-[120px] opacity-40" />
+      </div>
+
+      <div className="relative w-full max-w-md">
+        {/* Logo */}
+        <div className="text-center mb-8">
+          <Link
+            href="/"
+            className="text-3xl font-bold font-[family-name:var(--font-display)] text-[var(--text)] hover:text-[var(--accent)] transition-colors"
           >
-            Enter
-          </button>
-        </form>
+            BRR<span className="text-[var(--accent)]">.</span>
+          </Link>
+          <p className="text-[var(--text-muted)] text-sm mt-2">Content Management</p>
+        </div>
+
+        <div className="card">
+          {/* Header */}
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-10 h-10 rounded-xl bg-[var(--dark-burgundy)] border border-[var(--accent-border)] flex items-center justify-center">
+              <HiLockClosed size={18} className="text-[var(--accent)]" />
+            </div>
+            <div>
+              <h1 className="font-bold text-[var(--text)] font-[family-name:var(--font-display)]">Admin Login</h1>
+              <p className="text-xs text-[var(--text-muted)]">Sign in to manage your portfolio</p>
+            </div>
+          </div>
+
+          {/* Error */}
+          {error && (
+            <div className="toast toast-error mb-5" role="alert">
+              {error}
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit} className="space-y-4" noValidate>
+            <div>
+              <label className="label" htmlFor="login-email">Email</label>
+              <input
+                id="login-email"
+                type="email"
+                className="input"
+                placeholder="admin@example.com"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                required
+                autoComplete="email"
+              />
+            </div>
+            <div>
+              <label className="label" htmlFor="login-password">Password</label>
+              <input
+                id="login-password"
+                type="password"
+                className="input"
+                placeholder="••••••••"
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+                required
+                autoComplete="current-password"
+              />
+            </div>
+            <button
+              type="submit"
+              disabled={loading}
+              className="btn btn-primary w-full group mt-2"
+            >
+              {loading ? 'Signing in...' : 'Sign In'}
+              {!loading && (
+                <HiArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+              )}
+            </button>
+          </form>
+        </div>
+
+        <div className="text-center mt-6">
+          <Link href="/" className="text-sm text-[var(--text-muted)] hover:text-[var(--text)] transition-colors">
+            ← Back to portfolio
+          </Link>
+        </div>
       </div>
     </div>
   )

@@ -1,20 +1,31 @@
 import HeroSection from '@/components/HeroSection'
 import WorkExperienceSection from '@/components/WorkExperienceSection'
 import ProjectsSection from '@/components/ProjectsSection'
-import TechStackMarquee from '@/components/TechStackMarquee'
-import { prisma } from '@/lib/prisma'
+import SkillsSection from '@/components/TechStackMarquee'
+import ServicesSection from '@/components/ServicesSection'
+import ProcessSection from '@/components/ProcessSection'
+import ContactSection from '@/components/ContactSection'
+import Footer from '@/components/Footer'
+import { getProfile, getExperiences, getProjects, getTechStacks } from '@/lib/data'
 
 export default async function Home() {
-  const techStacks = await prisma.techStack.findMany({
-    orderBy: { order: 'asc' }
-  })
+  const [profile, experiences, projects, techStacks] = await Promise.all([
+    getProfile(),
+    getExperiences(),
+    getProjects(),
+    getTechStacks(),
+  ])
 
   return (
     <>
-      <HeroSection />
-      <TechStackMarquee techStacks={techStacks} />
-      <WorkExperienceSection />
-      <ProjectsSection />
+      <HeroSection profile={profile} />
+      <SkillsSection techStacks={techStacks} />
+      <ProjectsSection projects={projects} />
+      <ServicesSection />
+      <WorkExperienceSection experiences={experiences} />
+      <ProcessSection />
+      <ContactSection profile={profile} />
+      <Footer profile={profile} />
     </>
   )
 }

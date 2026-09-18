@@ -1,0 +1,122 @@
+[
+  {
+    "id": 1,
+    "name": "React",
+    "imageUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg",
+    "order": 0,
+    "createdAt": "2026-09-05T09:53:47.680Z",
+    "updatedAt": "2026-09-05T09:53:47.680Z"
+  },
+  {
+    "id": 2,
+    "name": "Figma",
+    "imageUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/figma/figma-original.svg",
+    "order": 0,
+    "createdAt": "2026-09-05T09:53:47.683Z",
+    "updatedAt": "2026-09-05T09:53:47.683Z"
+  },
+  {
+    "id": 3,
+    "name": "TailwindCSS",
+    "imageUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tailwindcss/tailwindcss-original.svg",
+    "order": 0,
+    "createdAt": "2026-09-05T09:53:47.684Z",
+    "updatedAt": "2026-09-05T09:53:47.684Z"
+  },
+  {
+    "id": 4,
+    "name": "Vite",
+    "imageUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vite/vite-original.svg",
+    "order": 0,
+    "createdAt": "2026-09-05T09:53:47.685Z",
+    "updatedAt": "2026-09-05T09:53:47.685Z"
+  },
+  {
+    "id": 5,
+    "name": "Vercel",
+    "imageUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vercel/vercel-original.svg",
+    "order": 0,
+    "createdAt": "2026-09-05T09:53:47.685Z",
+    "updatedAt": "2026-09-05T09:53:47.685Z"
+  },
+  {
+    "id": 6,
+    "name": "Next.js",
+    "imageUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nextjs/nextjs-original.svg",
+    "order": 0,
+    "createdAt": "2026-09-05T09:53:47.748Z",
+    "updatedAt": "2026-09-05T09:53:47.748Z"
+  },
+  {
+    "id": 7,
+    "name": "Node.js",
+    "imageUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nodejs/nodejs-original.svg",
+    "order": 0,
+    "createdAt": "2026-09-05T09:53:47.750Z",
+    "updatedAt": "2026-09-05T09:53:47.750Z"
+  },
+  {
+    "id": 8,
+    "name": "PostgreSQL",
+    "imageUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postgresql/postgresql-original.svg",
+    "order": 0,
+    "createdAt": "2026-09-05T09:53:47.751Z",
+    "updatedAt": "2026-09-05T09:53:47.751Z"
+  },
+  {
+    "id": 9,
+    "name": "Supabase",
+    "imageUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/supabase/supabase-original.svg",
+    "order": 0,
+    "createdAt": "2026-09-05T09:53:47.753Z",
+    "updatedAt": "2026-09-05T09:53:47.753Z"
+  },
+  {
+    "id": 10,
+    "name": "Laravel",
+    "imageUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/laravel/laravel-original.svg",
+    "order": 0,
+    "createdAt": "2026-09-05T09:53:47.790Z",
+    "updatedAt": "2026-09-05T09:53:47.790Z"
+  },
+  {
+    "id": 11,
+    "name": "MySQL",
+    "imageUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mysql/mysql-original.svg",
+    "order": 0,
+    "createdAt": "2026-09-05T09:53:47.792Z",
+    "updatedAt": "2026-09-05T09:53:47.792Z"
+  },
+  {
+    "id": 12,
+    "name": "PHP",
+    "imageUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/php/php-original.svg",
+    "order": 0,
+    "createdAt": "2026-09-05T09:53:47.793Z",
+    "updatedAt": "2026-09-05T09:53:47.793Z"
+  },
+  {
+    "id": 13,
+    "name": "Flutter",
+    "imageUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/flutter/flutter-original.svg",
+    "order": 0,
+    "createdAt": "2026-09-05T09:53:47.813Z",
+    "updatedAt": "2026-09-05T09:53:47.813Z"
+  },
+  {
+    "id": 14,
+    "name": "Dart",
+    "imageUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/dart/dart-original.svg",
+    "order": 0,
+    "createdAt": "2026-09-05T09:53:47.815Z",
+    "updatedAt": "2026-09-05T09:53:47.815Z"
+  },
+  {
+    "id": 15,
+    "name": "VS Code",
+    "imageUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vscode/vscode-original.svg",
+    "order": 0,
+    "createdAt": "2026-09-05T09:53:47.816Z",
+    "updatedAt": "2026-09-05T09:53:47.816Z"
+  }
+]

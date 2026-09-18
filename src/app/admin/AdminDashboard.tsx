@@ -2,415 +2,438 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { HiPlus, HiPencil, HiTrash, HiX, HiCheck, HiUpload, HiExclamation } from 'react-icons/hi'
+import type { Profile, WorkExperience, Project, TechStack } from '@/lib/data'
 
-export default function AdminDashboard({ 
-  initialProfile, 
-  initialExperiences, 
-  initialProjects,
-  initialTechStacks 
-}: { 
-  initialProfile: any, 
-  initialExperiences: any[], 
-  initialProjects: any[],
-  initialTechStacks?: any[]
+// ──────────────────────────────────────────────────────────
+// Sub-components
+// ──────────────────────────────────────────────────────────
+
+function Toast({ type, text, onClose }: { type: string; text: string; onClose: () => void }) {
+  if (!text) return null
+  return (
+    <div className={`flex items-center justify-between gap-3 toast ${type === 'success' ? 'toast-success' : 'toast-error'}`}>
+      <div className="flex items-center gap-2">
+        {type === 'success' ? <HiCheck size={15} /> : <HiExclamation size={15} />}
+        <span>{text}</span>
+      </div>
+      <button onClick={onClose} className="btn btn-sm btn-ghost p-1">
+        <HiX size={14} />
+      </button>
+    </div>
+  )
+}
+
+function SectionHeader({ title, description, action }: { title: string; description?: string; action?: React.ReactNode }) {
+  return (
+    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
+      <div>
+        <h2 className="text-lg font-bold font-[family-name:var(--font-display)] text-[var(--text)]">{title}</h2>
+        {description && <p className="text-sm text-[var(--text-muted)] mt-0.5">{description}</p>}
+      </div>
+      {action}
+    </div>
+  )
+}
+
+function DeleteModal({
+  label,
+  onConfirm,
+  onCancel,
+}: {
+  label: string
+  onConfirm: () => void
+  onCancel: () => void
 }) {
-  const [profile, setProfile] = useState(initialProfile || {})
-  const [experiences, setExperiences] = useState<any[]>(initialExperiences || [])
-  const [projects, setProjects] = useState<any[]>(initialProjects || [])
-  const [techStacks, setTechStacks] = useState<any[]>(initialTechStacks || [])
-  
-  const [editingExp, setEditingExp] = useState<any | null>(null)
-  const [editingProj, setEditingProj] = useState<any | null>(null)
-  const [editingTech, setEditingTech] = useState<any | null>(null)
-  
+  return (
+    <div className="modal-overlay" role="dialog" aria-modal="true" aria-label={`Delete ${label}`}>
+      <div className="card max-w-sm w-full" onClick={(e) => e.stopPropagation()}>
+        <div className="flex items-center gap-3 mb-4">
+          <div className="w-10 h-10 rounded-xl bg-[var(--danger)]/10 border border-[var(--danger)]/30 flex items-center justify-center">
+            <HiTrash size={18} className="text-[var(--danger)]" />
+          </div>
+          <div>
+            <h3 className="font-bold text-[var(--text)]">Delete {label}?</h3>
+            <p className="text-xs text-[var(--text-muted)]">This action cannot be undone.</p>
+          </div>
+        </div>
+        <div className="flex gap-3">
+          <button onClick={onCancel} className="btn btn-secondary flex-1">Cancel</button>
+          <button onClick={onConfirm} className="btn btn-danger flex-1">Delete</button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ──────────────────────────────────────────────────────────
+// Main Component
+// ──────────────────────────────────────────────────────────
+
+export default function AdminDashboard({
+  initialProfile,
+  initialExperiences,
+  initialProjects,
+  initialTechStacks,
+}: {
+  initialProfile: Profile | null
+  initialExperiences: WorkExperience[]
+  initialProjects: Project[]
+  initialTechStacks?: TechStack[]
+}) {
+  const [profile, setProfile] = useState<Profile>(initialProfile || ({} as Profile))
+  const [experiences, setExperiences] = useState<WorkExperience[]>(initialExperiences || [])
+  const [projects, setProjects] = useState<Project[]>(initialProjects || [])
+  const [techStacks, setTechStacks] = useState<TechStack[]>(initialTechStacks || [])
+
+  const [editingExp, setEditingExp] = useState<WorkExperience | null>(null)
+  const [editingProj, setEditingProj] = useState<Project | null>(null)
+  const [editingTech, setEditingTech] = useState<TechStack | null>(null)
+
   const [saving, setSaving] = useState(false)
   const [uploading, setUploading] = useState(false)
-  const [message, setMessage] = useState({ type: '', text: '' })
-  
-  // Use string identifier like 'exp_1' or 'proj_2' to differentiate deletes
+  const [toast, setToast] = useState({ type: '', text: '' })
   const [deletingId, setDeletingId] = useState<string | null>(null)
-  
+  const [extractedCVData, setExtractedCVData] = useState<any | null>(null)
+
   const router = useRouter()
 
-  const handleProfileChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    setProfile({ ...profile, [e.target.name]: e.target.value })
+  const showToast = (type: string, text: string) => {
+    setToast({ type, text })
+    setTimeout(() => setToast({ type: '', text: '' }), 5000)
   }
 
+  const formatDateForInput = (dateString: string | Date | null) => {
+    if (!dateString) return ''
+    return new Date(dateString as string).toISOString().split('T')[0]
+  }
+
+  // ── Profile ──────────────────────────────────────────────
   const saveProfile = async (e: React.FormEvent) => {
     e.preventDefault()
     setSaving(true)
-    setMessage({ type: '', text: '' })
-    
     try {
       const res = await fetch('/api/admin/profile', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(profile)
+        body: JSON.stringify(profile),
       })
-      
       if (res.ok) {
-        setMessage({ type: 'success', text: 'Profile updated successfully!' })
+        showToast('success', 'Profile updated successfully!')
         router.refresh()
       } else {
-        setMessage({ type: 'error', text: 'Failed to update profile.' })
+        showToast('error', 'Failed to update profile.')
       }
-    } catch (error) {
-      setMessage({ type: 'error', text: 'An error occurred.' })
+    } catch {
+      showToast('error', 'An error occurred.')
     } finally {
       setSaving(false)
     }
   }
 
-  const [extractedCVData, setExtractedCVData] = useState<any | null>(null)
-
+  // ── CV Upload ─────────────────────────────────────────────
   const uploadCV = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
-    
     if (file.type !== 'application/pdf') {
-      setMessage({ type: 'error', text: 'Please upload a PDF file.' })
+      showToast('error', 'Please upload a PDF file.')
       return
     }
-
     setUploading(true)
-    setMessage({ type: '', text: '' })
-    
     const formData = new FormData()
     formData.append('file', file)
-    
     try {
-      const res = await fetch('/api/admin/upload', {
-        method: 'POST',
-        body: formData
-      })
-      
+      const res = await fetch('/api/admin/upload', { method: 'POST', body: formData })
       if (res.ok) {
         const resData = await res.json()
-        setMessage({ type: 'success', text: 'CV uploaded successfully!' })
-        if (resData.extractedData && Object.values(resData.extractedData).some(val => val !== null)) {
+        showToast('success', 'CV uploaded successfully!')
+        if (resData.extractedData && Object.values(resData.extractedData).some(Boolean)) {
           setExtractedCVData(resData.extractedData)
         }
       } else {
-        setMessage({ type: 'error', text: 'Failed to upload CV.' })
+        showToast('error', 'Failed to upload CV.')
       }
-    } catch (error) {
-      setMessage({ type: 'error', text: 'An error occurred during upload.' })
+    } catch {
+      showToast('error', 'An error occurred during upload.')
     } finally {
       setUploading(false)
     }
   }
 
-  const handleLogout = async () => {
-    await fetch('/api/admin/logout', { method: 'POST' })
-    router.push('/')
-    router.refresh()
-  }
-
-  // Work Experience CRUD Handlers
-  const handleExpChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setEditingExp({ ...editingExp, [e.target.name]: e.target.value })
-  }
-
+  // ── Experiences ───────────────────────────────────────────
   const saveExperience = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (!editingExp) return
     setSaving(true)
-    setMessage({ type: '', text: '' })
-    
     const isNew = !editingExp.id
-    
     try {
       const res = await fetch('/api/admin/experience', {
         method: isNew ? 'POST' : 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(editingExp)
+        body: JSON.stringify(editingExp),
       })
-      
       if (res.ok) {
         const { experience } = await res.json()
         if (isNew) {
-          setExperiences([experience, ...experiences].sort((a, b) => new Date(b.startDate).getTime() - new Date(a.startDate).getTime()))
+          setExperiences(prev => [experience, ...prev].sort((a, b) =>
+            new Date(b.startDate as string).getTime() - new Date(a.startDate as string).getTime()
+          ))
         } else {
-          setExperiences(experiences.map(exp => exp.id === experience.id ? experience : exp).sort((a, b) => new Date(b.startDate).getTime() - new Date(a.startDate).getTime()))
+          setExperiences(prev => prev.map(e => e.id === experience.id ? experience : e).sort((a, b) =>
+            new Date(b.startDate as string).getTime() - new Date(a.startDate as string).getTime()
+          ))
         }
         setEditingExp(null)
-        setMessage({ type: 'success', text: 'Work experience saved!' })
+        showToast('success', 'Experience saved!')
         router.refresh()
       } else {
-        setMessage({ type: 'error', text: 'Failed to save experience.' })
+        showToast('error', 'Failed to save experience.')
       }
-    } catch (error) {
-      setMessage({ type: 'error', text: 'An error occurred.' })
+    } catch {
+      showToast('error', 'An error occurred.')
     } finally {
       setSaving(false)
     }
   }
 
-  // Project CRUD Handlers
-  const handleProjChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setEditingProj({ ...editingProj, [e.target.name]: e.target.value })
-  }
-
+  // ── Projects ──────────────────────────────────────────────
   const saveProject = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (!editingProj) return
     setSaving(true)
-    setMessage({ type: '', text: '' })
-    
     const isNew = !editingProj.id
-    
     try {
       const res = await fetch('/api/admin/project', {
         method: isNew ? 'POST' : 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(editingProj)
+        body: JSON.stringify(editingProj),
       })
-      
       if (res.ok) {
         const { project } = await res.json()
         if (isNew) {
-          setProjects([...projects, project].sort((a, b) => (a.order || 0) - (b.order || 0)))
+          setProjects(prev => [...prev, project].sort((a, b) => (a.order || 0) - (b.order || 0)))
         } else {
-          setProjects(projects.map(p => p.id === project.id ? project : p).sort((a, b) => (a.order || 0) - (b.order || 0)))
+          setProjects(prev => prev.map(p => p.id === project.id ? project : p).sort((a, b) => (a.order || 0) - (b.order || 0)))
         }
         setEditingProj(null)
-        setMessage({ type: 'success', text: 'Project saved!' })
+        showToast('success', 'Project saved!')
         router.refresh()
       } else {
-        setMessage({ type: 'error', text: 'Failed to save project.' })
+        showToast('error', 'Failed to save project.')
       }
-    } catch (error) {
-      setMessage({ type: 'error', text: 'An error occurred.' })
+    } catch {
+      showToast('error', 'An error occurred.')
     } finally {
       setSaving(false)
     }
   }
 
-  // Tech Stack CRUD Handlers
-  const handleTechChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEditingTech({ ...editingTech, [e.target.name]: e.target.value })
-  }
-
+  // ── Tech Stack ────────────────────────────────────────────
   const saveTechStack = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (!editingTech) return
     setSaving(true)
-    setMessage({ type: '', text: '' })
-    
     const isNew = !editingTech.id
-    
     try {
       const res = await fetch('/api/admin/techstack', {
         method: isNew ? 'POST' : 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(editingTech)
+        body: JSON.stringify(editingTech),
       })
-      
       if (res.ok) {
         const { techStack } = await res.json()
         if (isNew) {
-          setTechStacks([...techStacks, techStack].sort((a, b) => (a.order || 0) - (b.order || 0)))
+          setTechStacks(prev => [...prev, techStack].sort((a, b) => (a.order || 0) - (b.order || 0)))
         } else {
-          setTechStacks(techStacks.map(t => t.id === techStack.id ? techStack : t).sort((a, b) => (a.order || 0) - (b.order || 0)))
+          setTechStacks(prev => prev.map(t => t.id === techStack.id ? techStack : t).sort((a, b) => (a.order || 0) - (b.order || 0)))
         }
         setEditingTech(null)
-        setMessage({ type: 'success', text: 'Tech Stack saved!' })
+        showToast('success', 'Tech stack saved!')
         router.refresh()
       } else {
-        setMessage({ type: 'error', text: 'Failed to save tech stack.' })
+        showToast('error', 'Failed to save tech stack.')
       }
-    } catch (error) {
-      setMessage({ type: 'error', text: 'An error occurred.' })
+    } catch {
+      showToast('error', 'An error occurred.')
     } finally {
       setSaving(false)
     }
   }
 
+  // ── Delete ────────────────────────────────────────────────
   const confirmDelete = async () => {
     if (!deletingId) return
-    
     const [type, idStr] = deletingId.split('_')
     const id = parseInt(idStr)
-    
     try {
       const res = await fetch(`/api/admin/${type}?id=${id}`, { method: 'DELETE' })
       if (res.ok) {
-        if (type === 'experience') {
-          setExperiences(experiences.filter(item => item.id !== id))
-        } else if (type === 'project') {
-          setProjects(projects.filter(item => item.id !== id))
-        } else if (type === 'techstack') {
-          setTechStacks(techStacks.filter(item => item.id !== id))
-        }
-        setMessage({ type: 'success', text: 'Item deleted.' })
+        if (type === 'experience') setExperiences(prev => prev.filter(i => i.id !== id))
+        else if (type === 'project') setProjects(prev => prev.filter(i => i.id !== id))
+        else if (type === 'techstack') setTechStacks(prev => prev.filter(i => i.id !== id))
+        showToast('success', 'Deleted successfully.')
         router.refresh()
       } else {
-        setMessage({ type: 'error', text: 'Failed to delete item.' })
+        showToast('error', 'Failed to delete.')
       }
-    } catch (error) {
-      setMessage({ type: 'error', text: 'An error occurred.' })
+    } catch {
+      showToast('error', 'An error occurred.')
     } finally {
       setDeletingId(null)
     }
   }
 
-  const formatDateForInput = (dateString: string | null) => {
-    if (!dateString) return ''
-    const d = new Date(dateString)
-    return d.toISOString().split('T')[0]
-  }
+  const deleteLabel = deletingId
+    ? deletingId.startsWith('experience')
+      ? 'Experience'
+      : deletingId.startsWith('project')
+        ? 'Project'
+        : 'Tech Stack'
+    : ''
 
+  // ──────────────────────────────────────────────────────────
+  // Render
+  // ──────────────────────────────────────────────────────────
   return (
-    <div className="space-y-8 pb-20">
-      <div className="flex justify-end">
-        <button 
-          onClick={handleLogout}
-          className="brutal-btn bg-accent-red text-white px-4 py-2 font-bold"
-        >
-          Logout
-        </button>
-      </div>
-
-      {message.text && (
-        <div className={`p-4 font-bold brutal-border ${message.type === 'success' ? 'bg-accent-green' : 'bg-accent-red text-white'}`}>
-          {message.text}
-        </div>
+    <div className="space-y-8">
+      {/* Toast */}
+      {toast.text && (
+        <Toast type={toast.type} text={toast.text} onClose={() => setToast({ type: '', text: '' })} />
       )}
 
-      {/* CV Upload Section */}
-      <div className="brutal-border brutal-shadow bg-card-bg p-6 md:p-8">
-        <h2 className="text-2xl font-bold font-[family-name:var(--font-space-mono)] mb-4">Upload CV (PDF)</h2>
-        <div className="flex items-center gap-4">
-          <input 
-            type="file" 
-            accept="application/pdf"
-            onChange={uploadCV}
-            disabled={uploading}
-            className="block w-full text-sm opacity-75
-              file:mr-4 file:py-2 file:px-4
-              file:border-4 file:border-black
-              file:text-sm file:font-bold
-              file:bg-accent-yellow file:text-\[#111\]
-              hover:file:bg-accent-blue hover:file:text-white
-              file:cursor-pointer file:transition-colors"
-          />
-          {uploading && <span className="font-bold">Uploading...</span>}
-        </div>
-      </div>
-
-      {/* Profile Form */}
-      <div className="brutal-border brutal-shadow bg-card-bg p-6 md:p-8">
-        <h2 className="text-2xl font-bold font-[family-name:var(--font-space-mono)] mb-6">Personal Information</h2>
-        
+      {/* ── PROFILE ── */}
+      <section id="profile" className="card">
+        <SectionHeader
+          title="Profile"
+          description="Your public portfolio information"
+        />
         <form onSubmit={saveProfile} className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block font-bold mb-2">Full Name</label>
-              <input type="text" name="fullName" value={profile.fullName || ''} onChange={handleProfileChange} className="w-full p-3 brutal-border focus:bg-accent-yellow outline-none" required />
+              <label className="label" htmlFor="p-fullName">Full Name</label>
+              <input id="p-fullName" type="text" className="input" name="fullName" value={profile.fullName || ''} onChange={e => setProfile(p => ({ ...p, fullName: e.target.value }))} required />
             </div>
             <div>
-              <label className="block font-bold mb-2">Job Title</label>
-              <input type="text" name="title" value={profile.title || ''} onChange={handleProfileChange} className="w-full p-3 brutal-border focus:bg-accent-yellow outline-none" required />
+              <label className="label" htmlFor="p-title">Job Title</label>
+              <input id="p-title" type="text" className="input" name="title" value={profile.title || ''} onChange={e => setProfile(p => ({ ...p, title: e.target.value }))} required />
             </div>
           </div>
-          
           <div>
-            <label className="block font-bold mb-2">Hero Title</label>
-            <textarea name="heroTitle" value={profile.heroTitle || ''} onChange={handleProfileChange} className="w-full p-3 brutal-border focus:bg-accent-yellow outline-none" rows={2} required />
+            <label className="label" htmlFor="p-heroTitle">Hero Headline</label>
+            <textarea id="p-heroTitle" className="input" rows={2} name="heroTitle" value={profile.heroTitle || ''} onChange={e => setProfile(p => ({ ...p, heroTitle: e.target.value }))} required />
           </div>
-
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block font-bold mb-2">Email</label>
-              <input type="email" name="email" value={profile.email || ''} onChange={handleProfileChange} className="w-full p-3 brutal-border focus:bg-accent-yellow outline-none" required />
+              <label className="label" htmlFor="p-email">Email</label>
+              <input id="p-email" type="email" className="input" name="email" value={profile.email || ''} onChange={e => setProfile(p => ({ ...p, email: e.target.value }))} required />
             </div>
             <div>
-              <label className="block font-bold mb-2">Phone</label>
-              <input type="text" name="phone" value={profile.phone || ''} onChange={handleProfileChange} className="w-full p-3 brutal-border focus:bg-accent-yellow outline-none" required />
+              <label className="label" htmlFor="p-phone">Phone</label>
+              <input id="p-phone" type="text" className="input" name="phone" value={profile.phone || ''} onChange={e => setProfile(p => ({ ...p, phone: e.target.value }))} />
             </div>
             <div>
-              <label className="block font-bold mb-2">WhatsApp Number (e.g. 628...)</label>
-              <input type="text" name="whatsapp" value={profile.whatsapp || ''} onChange={handleProfileChange} className="w-full p-3 brutal-border focus:bg-accent-yellow outline-none" />
+              <label className="label" htmlFor="p-whatsapp">WhatsApp (e.g. 628...)</label>
+              <input id="p-whatsapp" type="text" className="input" name="whatsapp" value={profile.whatsapp || ''} onChange={e => setProfile(p => ({ ...p, whatsapp: e.target.value }))} />
             </div>
             <div>
-              <label className="block font-bold mb-2">LinkedIn URL</label>
-              <input type="url" name="linkedin" value={profile.linkedin || ''} onChange={handleProfileChange} className="w-full p-3 brutal-border focus:bg-accent-yellow outline-none" />
+              <label className="label" htmlFor="p-linkedin">LinkedIn URL</label>
+              <input id="p-linkedin" type="url" className="input" name="linkedin" value={profile.linkedin || ''} onChange={e => setProfile(p => ({ ...p, linkedin: e.target.value }))} />
             </div>
             <div>
-              <label className="block font-bold mb-2">Website Theme</label>
-              <select name="theme" value={profile.theme || 'light-1'} onChange={handleProfileChange} className="w-full p-3 brutal-border focus:bg-accent-yellow outline-none">
-                <option value="light-1">Light Theme 1 (Brutalism)</option>
-                <option value="light-2">Light Theme 2 (Soft Maroon)</option>
-                <option value="dark-1">Dark Theme 1 (Sleek Zinc)</option>
-                <option value="dark-2">Dark Theme 2 (Midnight Burgundy)</option>
+              <label className="label" htmlFor="p-theme">Theme</label>
+              <select id="p-theme" className="input" name="theme" value={profile.theme || 'dark'} onChange={e => setProfile(p => ({ ...p, theme: e.target.value }))}>
+                <option value="dark">Dark (Burgundy)</option>
+                <option value="light">Light</option>
               </select>
             </div>
           </div>
-
-          <button type="submit" disabled={saving} className="brutal-btn bg-accent-blue text-white font-bold py-3 px-8 mt-6 text-lg">
-            {saving ? 'Saving...' : 'Save Changes'}
+          <button type="submit" disabled={saving} className="btn btn-primary">
+            {saving ? 'Saving...' : 'Save Profile'}
           </button>
         </form>
-      </div>
+      </section>
 
-      {/* Work Experience CRUD */}
-      <div className="brutal-border brutal-shadow bg-card-bg p-6 md:p-8">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold font-[family-name:var(--font-space-mono)]">Work Experience</h2>
-          {!editingExp && (
-            <button 
-              onClick={() => setEditingExp({ company: '', role: '', startDate: '', endDate: '', summary: '', description: '', techStack: '' })}
-              className="brutal-btn bg-accent-green text-\[#111\] px-4 py-2 font-bold"
-            >
-              + Add New
-            </button>
-          )}
+      {/* ── CV UPLOAD ── */}
+      <section className="card">
+        <SectionHeader title="CV / Resume" description="Upload your PDF to make it downloadable" />
+        <div className="flex items-center gap-4 flex-wrap">
+          <label className="btn btn-secondary cursor-pointer">
+            <HiUpload size={16} />
+            {uploading ? 'Uploading...' : 'Upload PDF'}
+            <input
+              type="file"
+              accept="application/pdf"
+              onChange={uploadCV}
+              disabled={uploading}
+              className="sr-only"
+              aria-label="Upload CV PDF"
+            />
+          </label>
+          <a href="/cv.pdf" target="_blank" rel="noopener noreferrer" className="btn btn-ghost text-sm">
+            View current CV ↗
+          </a>
         </div>
+      </section>
+
+      {/* ── EXPERIENCES ── */}
+      <section id="experience" className="card">
+        <SectionHeader
+          title="Work Experience"
+          description={`${experiences.length} entries`}
+          action={
+            !editingExp ? (
+              <button
+                onClick={() => setEditingExp({ id: 0, company: '', role: '', startDate: '', endDate: null, summary: '', description: '', techStack: [], order: 0 })}
+                className="btn btn-primary btn-sm"
+              >
+                <HiPlus size={15} /> Add Experience
+              </button>
+            ) : null
+          }
+        />
 
         {/* Experience Form */}
         {editingExp && (
-          <div className="mb-8 p-6 bg-gray-50 border-4 border-black border-dashed">
-            <h3 className="text-xl font-bold mb-4">{editingExp.id ? 'Edit Experience' : 'Add New Experience'}</h3>
+          <div className="mb-6 p-5 bg-[var(--surface-elevated)] border border-[var(--accent-border)] rounded-xl">
+            <h3 className="text-sm font-bold text-[var(--text)] mb-4">
+              {editingExp.id ? 'Edit Experience' : 'New Experience'}
+            </h3>
             <form onSubmit={saveExperience} className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block font-bold mb-2">Company Name</label>
-                  <input type="text" name="company" value={editingExp.company || ''} onChange={handleExpChange} className="w-full p-3 brutal-border focus:bg-accent-yellow outline-none" required />
+                  <label className="label" htmlFor="exp-company">Company</label>
+                  <input id="exp-company" type="text" className="input" value={editingExp.company || ''} onChange={e => setEditingExp(ex => ({ ...ex!, company: e.target.value }))} required />
                 </div>
                 <div>
-                  <label className="block font-bold mb-2">Role/Title</label>
-                  <input type="text" name="role" value={editingExp.role || ''} onChange={handleExpChange} className="w-full p-3 brutal-border focus:bg-accent-yellow outline-none" required />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block font-bold mb-2">Start Date</label>
-                  <input type="date" name="startDate" value={formatDateForInput(editingExp.startDate)} onChange={handleExpChange} className="w-full p-3 brutal-border focus:bg-accent-yellow outline-none" required />
+                  <label className="label" htmlFor="exp-role">Role / Title</label>
+                  <input id="exp-role" type="text" className="input" value={editingExp.role || ''} onChange={e => setEditingExp(ex => ({ ...ex!, role: e.target.value }))} required />
                 </div>
                 <div>
-                  <label className="block font-bold mb-2">End Date (Leave blank if Present)</label>
-                  <input type="date" name="endDate" value={formatDateForInput(editingExp.endDate)} onChange={handleExpChange} className="w-full p-3 brutal-border focus:bg-accent-yellow outline-none" />
+                  <label className="label" htmlFor="exp-start">Start Date</label>
+                  <input id="exp-start" type="date" className="input" value={formatDateForInput(editingExp.startDate)} onChange={e => setEditingExp(ex => ({ ...ex!, startDate: e.target.value }))} required />
+                </div>
+                <div>
+                  <label className="label" htmlFor="exp-end">End Date (blank = Present)</label>
+                  <input id="exp-end" type="date" className="input" value={formatDateForInput(editingExp.endDate)} onChange={e => setEditingExp(ex => ({ ...ex!, endDate: e.target.value || null }))} />
                 </div>
               </div>
-
               <div>
-                <label className="block font-bold mb-2">Short Summary</label>
-                <input type="text" name="summary" value={editingExp.summary || ''} onChange={handleExpChange} className="w-full p-3 brutal-border focus:bg-accent-yellow outline-none" required />
+                <label className="label" htmlFor="exp-summary">Short Summary</label>
+                <input id="exp-summary" type="text" className="input" value={editingExp.summary || ''} onChange={e => setEditingExp(ex => ({ ...ex!, summary: e.target.value }))} required />
               </div>
-
               <div>
-                <label className="block font-bold mb-2">Full Description</label>
-                <textarea name="description" value={editingExp.description || ''} onChange={handleExpChange} className="w-full p-3 brutal-border focus:bg-accent-yellow outline-none" rows={4} required />
+                <label className="label" htmlFor="exp-desc">Full Description</label>
+                <textarea id="exp-desc" className="input" rows={4} value={editingExp.description || ''} onChange={e => setEditingExp(ex => ({ ...ex!, description: e.target.value }))} required />
               </div>
-
               <div>
-                <label className="block font-bold mb-2">Tech Stack (comma separated)</label>
-                <input type="text" name="techStack" value={typeof editingExp.techStack === 'string' ? editingExp.techStack : (editingExp.techStack?.join(', ') || '')} onChange={handleExpChange} className="w-full p-3 brutal-border focus:bg-accent-yellow outline-none" placeholder="React, Next.js, Tailwind..." required />
+                <label className="label" htmlFor="exp-tech">Tech Stack (comma separated)</label>
+                <input id="exp-tech" type="text" className="input" placeholder="React, Next.js, TypeScript..." value={Array.isArray(editingExp.techStack) ? editingExp.techStack.join(', ') : (editingExp.techStack || '')} onChange={e => setEditingExp(ex => ({ ...ex!, techStack: e.target.value.split(',').map(s => s.trim()).filter(Boolean) }))} required />
               </div>
-
-              <div className="flex gap-4 mt-6">
-                <button type="submit" disabled={saving} className="brutal-btn bg-accent-blue text-white font-bold py-2 px-6">
-                  {saving ? 'Saving...' : 'Save Experience'}
+              <div className="flex gap-3">
+                <button type="submit" disabled={saving} className="btn btn-primary">
+                  {saving ? 'Saving...' : 'Save'}
                 </button>
-                <button type="button" onClick={() => setEditingExp(null)} className="brutal-btn bg-card-bg font-bold py-2 px-6">
+                <button type="button" onClick={() => setEditingExp(null)} className="btn btn-secondary">
                   Cancel
                 </button>
               </div>
@@ -418,376 +441,274 @@ export default function AdminDashboard({
           </div>
         )}
 
-        {/* Experience List */}
-        <div className="space-y-4">
-          {experiences.map(exp => (
-            <div key={exp.id} className="brutal-border p-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 hover:bg-gray-50 transition-colors">
-              <div>
-                <h4 className="font-bold text-lg">{exp.role} <span className="text-accent-red">@ {exp.company}</span></h4>
-                <p className="text-sm opacity-75">{new Date(exp.startDate).getFullYear()} - {exp.endDate ? new Date(exp.endDate).getFullYear() : 'Present'}</p>
-              </div>
-              <div className="flex gap-2">
-                <button 
-                  onClick={() => setEditingExp(exp)} 
-                  className="brutal-btn bg-accent-yellow px-3 py-1 text-sm font-bold"
-                >
-                  Edit
-                </button>
-                <button 
-                  onClick={() => setDeletingId(`experience_${exp.id}`)} 
-                  className="brutal-btn bg-accent-red text-white px-3 py-1 text-sm font-bold"
-                >
-                  Delete
-                </button>
-              </div>
-            </div>
-          ))}
-          {experiences.length === 0 && (
-            <p className="opacity-75 italic">No work experiences added yet.</p>
-          )}
-        </div>
-      </div>
-
-      {/* Projects CRUD */}
-      <div className="brutal-border brutal-shadow bg-card-bg p-6 md:p-8">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold font-[family-name:var(--font-space-mono)]">Projects</h2>
-          {!editingProj && (
-            <button 
-              onClick={() => setEditingProj({ title: '', description: '', techStack: '', githubUrl: '', demoUrl: '', imageUrl: '', order: 0 })}
-              className="brutal-btn bg-accent-green text-\[#111\] px-4 py-2 font-bold"
-            >
-              + Add New
+        {/* Experience list */}
+        {experiences.length === 0 ? (
+          <div className="text-center py-10 text-[var(--text-muted)]">
+            <p className="mb-3">No experiences yet.</p>
+            <button onClick={() => setEditingExp({ id: 0, company: '', role: '', startDate: '', endDate: null, summary: '', description: '', techStack: [], order: 0 })} className="btn btn-secondary btn-sm">
+              <HiPlus size={14} /> Add your first role
             </button>
-          )}
-        </div>
+          </div>
+        ) : (
+          <div className="space-y-2">
+            {experiences.map(exp => (
+              <div key={exp.id} className="table-row rounded-xl px-4 py-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                <div>
+                  <p className="font-semibold text-[var(--text)] text-sm">{exp.role}</p>
+                  <p className="text-xs text-[var(--accent)]">{exp.company}</p>
+                  <p className="text-xs text-[var(--text-muted)] mt-0.5">
+                    {new Date(exp.startDate as string).getFullYear()} — {exp.endDate ? new Date(exp.endDate as string).getFullYear() : 'Present'}
+                  </p>
+                </div>
+                <div className="flex gap-2 shrink-0">
+                  <button onClick={() => setEditingExp(exp)} className="btn btn-sm btn-secondary"><HiPencil size={13} /> Edit</button>
+                  <button onClick={() => setDeletingId(`experience_${exp.id}`)} className="btn btn-sm btn-danger"><HiTrash size={13} /></button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
+
+      {/* ── PROJECTS ── */}
+      <section id="projects" className="card">
+        <SectionHeader
+          title="Projects"
+          description={`${projects.length} entries`}
+          action={
+            !editingProj ? (
+              <button
+                onClick={() => setEditingProj({ id: 0, title: '', description: '', techStack: [], githubUrl: '', demoUrl: '', imageUrl: '', order: 0 })}
+                className="btn btn-primary btn-sm"
+              >
+                <HiPlus size={15} /> Add Project
+              </button>
+            ) : null
+          }
+        />
 
         {/* Project Form */}
         {editingProj && (
-          <div className="mb-8 p-6 bg-gray-50 border-4 border-black border-dashed">
-            <h3 className="text-xl font-bold mb-4">{editingProj.id ? 'Edit Project' : 'Add New Project'}</h3>
+          <div className="mb-6 p-5 bg-[var(--surface-elevated)] border border-[var(--accent-border)] rounded-xl">
+            <h3 className="text-sm font-bold text-[var(--text)] mb-4">
+              {editingProj.id ? 'Edit Project' : 'New Project'}
+            </h3>
             <form onSubmit={saveProject} className="space-y-4">
               <div>
-                <label className="block font-bold mb-2">Project Title</label>
-                <input type="text" name="title" value={editingProj.title || ''} onChange={handleProjChange} className="w-full p-3 brutal-border focus:bg-accent-yellow outline-none" required />
+                <label className="label" htmlFor="proj-title">Project Title</label>
+                <input id="proj-title" type="text" className="input" value={editingProj.title || ''} onChange={e => setEditingProj(p => ({ ...p!, title: e.target.value }))} required />
               </div>
-
               <div>
-                <label className="block font-bold mb-2">Description</label>
-                <textarea name="description" value={editingProj.description || ''} onChange={handleProjChange} className="w-full p-3 brutal-border focus:bg-accent-yellow outline-none" rows={3} required />
+                <label className="label" htmlFor="proj-desc">Description</label>
+                <textarea id="proj-desc" className="input" rows={3} value={editingProj.description || ''} onChange={e => setEditingProj(p => ({ ...p!, description: e.target.value }))} required />
               </div>
-
               <div>
-                <label className="block font-bold mb-2">Tech Stack (comma separated)</label>
-                <input type="text" name="techStack" value={typeof editingProj.techStack === 'string' ? editingProj.techStack : (editingProj.techStack?.join(', ') || '')} onChange={handleProjChange} className="w-full p-3 brutal-border focus:bg-accent-yellow outline-none" placeholder="React, Node.js, Postgres..." required />
+                <label className="label" htmlFor="proj-tech">Tech Stack (comma separated)</label>
+                <input id="proj-tech" type="text" className="input" placeholder="React, Node.js, Postgres..." value={Array.isArray(editingProj.techStack) ? editingProj.techStack.join(', ') : (editingProj.techStack || '')} onChange={e => setEditingProj(p => ({ ...p!, techStack: e.target.value.split(',').map(s => s.trim()).filter(Boolean) }))} required />
               </div>
-
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block font-bold mb-2">GitHub URL</label>
-                  <input type="url" name="githubUrl" value={editingProj.githubUrl || ''} onChange={handleProjChange} className="w-full p-3 brutal-border focus:bg-accent-yellow outline-none" />
+                  <label className="label" htmlFor="proj-github">GitHub URL</label>
+                  <input id="proj-github" type="url" className="input" value={editingProj.githubUrl || ''} onChange={e => setEditingProj(p => ({ ...p!, githubUrl: e.target.value }))} />
                 </div>
                 <div>
-                  <label className="block font-bold mb-2">Demo URL</label>
-                  <input type="url" name="demoUrl" value={editingProj.demoUrl || ''} onChange={handleProjChange} className="w-full p-3 brutal-border focus:bg-accent-yellow outline-none" />
+                  <label className="label" htmlFor="proj-demo">Demo URL</label>
+                  <input id="proj-demo" type="url" className="input" value={editingProj.demoUrl || ''} onChange={e => setEditingProj(p => ({ ...p!, demoUrl: e.target.value }))} />
+                </div>
+                <div>
+                  <label className="label" htmlFor="proj-image">Image URL (optional)</label>
+                  <input id="proj-image" type="text" className="input" value={editingProj.imageUrl || ''} onChange={e => setEditingProj(p => ({ ...p!, imageUrl: e.target.value }))} />
+                </div>
+                <div>
+                  <label className="label" htmlFor="proj-order">Sort Order</label>
+                  <input id="proj-order" type="number" className="input" value={editingProj.order || 0} onChange={e => setEditingProj(p => ({ ...p!, order: parseInt(e.target.value) || 0 }))} />
                 </div>
               </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block font-bold mb-2">Image URL (optional)</label>
-                  <input type="text" name="imageUrl" value={editingProj.imageUrl || ''} onChange={handleProjChange} className="w-full p-3 brutal-border focus:bg-accent-yellow outline-none" />
-                </div>
-                <div>
-                  <label className="block font-bold mb-2">Sort Order</label>
-                  <input type="number" name="order" value={editingProj.order || 0} onChange={handleProjChange} className="w-full p-3 brutal-border focus:bg-accent-yellow outline-none" />
-                </div>
-              </div>
-
-              <div className="flex gap-4 mt-6">
-                <button type="submit" disabled={saving} className="brutal-btn bg-accent-blue text-white font-bold py-2 px-6">
-                  {saving ? 'Saving...' : 'Save Project'}
+              <div className="flex gap-3">
+                <button type="submit" disabled={saving} className="btn btn-primary">
+                  {saving ? 'Saving...' : 'Save'}
                 </button>
-                <button type="button" onClick={() => setEditingProj(null)} className="brutal-btn bg-card-bg font-bold py-2 px-6">
-                  Cancel
-                </button>
+                <button type="button" onClick={() => setEditingProj(null)} className="btn btn-secondary">Cancel</button>
               </div>
             </form>
           </div>
         )}
 
-        {/* Project List */}
-        <div className="space-y-4">
-          {projects.map(proj => (
-            <div key={proj.id} className="brutal-border p-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 hover:bg-gray-50 transition-colors">
-              <div>
-                <h4 className="font-bold text-lg">{proj.title}</h4>
-                <p className="text-sm opacity-75 line-clamp-1">{proj.description}</p>
-              </div>
-              <div className="flex gap-2 shrink-0">
-                <button 
-                  onClick={() => setEditingProj(proj)} 
-                  className="brutal-btn bg-accent-yellow px-3 py-1 text-sm font-bold"
-                >
-                  Edit
-                </button>
-                <button 
-                  onClick={() => setDeletingId(`project_${proj.id}`)} 
-                  className="brutal-btn bg-accent-red text-white px-3 py-1 text-sm font-bold"
-                >
-                  Delete
-                </button>
-              </div>
-            </div>
-          ))}
-          {projects.length === 0 && (
-            <p className="opacity-75 italic">No projects added yet.</p>
-          )}
-        </div>
-      </div>
-
-      {/* Tech Stack CRUD */}
-      <div className="brutal-border brutal-shadow bg-card-bg p-6 md:p-8">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold font-[family-name:var(--font-space-mono)]">Tech Stack</h2>
-          {!editingTech && (
-            <button 
-              onClick={() => setEditingTech({ name: '', imageUrl: '', order: 0 })}
-              className="brutal-btn bg-accent-green text-\[#111\] px-4 py-2 font-bold"
-            >
-              + Add New
+        {/* Project list */}
+        {projects.length === 0 ? (
+          <div className="text-center py-10 text-[var(--text-muted)]">
+            <p className="mb-3">No projects yet.</p>
+            <button onClick={() => setEditingProj({ id: 0, title: '', description: '', techStack: [], githubUrl: '', demoUrl: '', imageUrl: '', order: 0 })} className="btn btn-secondary btn-sm">
+              <HiPlus size={14} /> Add your first project
             </button>
-          )}
-        </div>
+          </div>
+        ) : (
+          <div className="space-y-2">
+            {projects.map(proj => (
+              <div key={proj.id} className="table-row rounded-xl px-4 py-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                <div>
+                  <p className="font-semibold text-[var(--text)] text-sm">{proj.title}</p>
+                  <p className="text-xs text-[var(--text-muted)] line-clamp-1 mt-0.5">{proj.description}</p>
+                </div>
+                <div className="flex gap-2 shrink-0">
+                  <button onClick={() => setEditingProj(proj)} className="btn btn-sm btn-secondary"><HiPencil size={13} /> Edit</button>
+                  <button onClick={() => setDeletingId(`project_${proj.id}`)} className="btn btn-sm btn-danger"><HiTrash size={13} /></button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
 
-        {/* Tech Stack Form */}
+      {/* ── TECH STACK ── */}
+      <section id="techstack" className="card">
+        <SectionHeader
+          title="Tech Stack"
+          description={`${techStacks.length} technologies`}
+          action={
+            !editingTech ? (
+              <button
+                onClick={() => setEditingTech({ id: 0, name: '', imageUrl: '', order: 0 })}
+                className="btn btn-primary btn-sm"
+              >
+                <HiPlus size={15} /> Add Tech
+              </button>
+            ) : null
+          }
+        />
+
+        {/* Tech Form */}
         {editingTech && (
-          <div className="mb-8 p-6 bg-gray-50 border-4 border-black border-dashed">
-            <h3 className="text-xl font-bold mb-4">{editingTech.id ? 'Edit Tech Stack' : 'Add New Tech Stack'}</h3>
+          <div className="mb-6 p-5 bg-[var(--surface-elevated)] border border-[var(--accent-border)] rounded-xl">
+            <h3 className="text-sm font-bold text-[var(--text)] mb-4">
+              {editingTech.id ? 'Edit Tech' : 'New Tech'}
+            </h3>
             <form onSubmit={saveTechStack} className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block font-bold mb-2">Tech Name</label>
-                  <input type="text" name="name" value={editingTech.name || ''} onChange={handleTechChange} className="w-full p-3 brutal-border focus:bg-accent-yellow outline-none" required />
+                  <label className="label" htmlFor="tech-name">Name</label>
+                  <input id="tech-name" type="text" className="input" value={editingTech.name || ''} onChange={e => setEditingTech(t => ({ ...t!, name: e.target.value }))} required />
                 </div>
                 <div>
-                  <label className="block font-bold mb-2">Image URL (Icon)</label>
-                  <input type="text" name="imageUrl" value={editingTech.imageUrl || ''} onChange={handleTechChange} className="w-full p-3 brutal-border focus:bg-accent-yellow outline-none" required />
+                  <label className="label" htmlFor="tech-img">Icon URL</label>
+                  <input id="tech-img" type="text" className="input" value={editingTech.imageUrl || ''} onChange={e => setEditingTech(t => ({ ...t!, imageUrl: e.target.value }))} required />
+                </div>
+                <div>
+                  <label className="label" htmlFor="tech-order">Sort Order</label>
+                  <input id="tech-order" type="number" className="input" value={editingTech.order || 0} onChange={e => setEditingTech(t => ({ ...t!, order: parseInt(e.target.value) || 0 }))} />
                 </div>
               </div>
-
-              <div>
-                <label className="block font-bold mb-2">Sort Order</label>
-                <input type="number" name="order" value={editingTech.order || 0} onChange={handleTechChange} className="w-full p-3 brutal-border focus:bg-accent-yellow outline-none" />
-              </div>
-
-              <div className="flex gap-4 mt-6">
-                <button type="submit" disabled={saving} className="brutal-btn bg-accent-blue text-white font-bold py-2 px-6">
-                  {saving ? 'Saving...' : 'Save Tech Stack'}
+              <div className="flex gap-3">
+                <button type="submit" disabled={saving} className="btn btn-primary">
+                  {saving ? 'Saving...' : 'Save'}
                 </button>
-                <button type="button" onClick={() => setEditingTech(null)} className="brutal-btn bg-card-bg font-bold py-2 px-6">
-                  Cancel
-                </button>
+                <button type="button" onClick={() => setEditingTech(null)} className="btn btn-secondary">Cancel</button>
               </div>
             </form>
           </div>
         )}
 
-        {/* Tech Stack List */}
-        <div className="space-y-4">
-          {techStacks.map(tech => (
-            <div key={tech.id} className="brutal-border p-4 flex flex-col md:flex-row justify-between items-center gap-4 hover:bg-gray-50 transition-colors">
-              <div className="flex items-center gap-4">
-                <img src={tech.imageUrl} alt={tech.name} className="w-8 h-8 object-contain" />
-                <h4 className="font-bold text-lg">{tech.name}</h4>
-              </div>
-              <div className="flex gap-2 shrink-0">
-                <button 
-                  onClick={() => setEditingTech(tech)} 
-                  className="brutal-btn bg-accent-yellow px-3 py-1 text-sm font-bold"
-                >
-                  Edit
-                </button>
-                <button 
-                  onClick={() => setDeletingId(`techstack_${tech.id}`)} 
-                  className="brutal-btn bg-accent-red text-white px-3 py-1 text-sm font-bold"
-                >
-                  Delete
-                </button>
-              </div>
-            </div>
-          ))}
-          {techStacks.length === 0 && (
-            <p className="opacity-75 italic">No tech stack added yet.</p>
-          )}
-        </div>
-      </div>
-
-      {/* Delete Confirmation Modal */}
-      {deletingId !== null && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm px-4">
-          <div className="brutal-border brutal-shadow-lg bg-card-bg p-6 max-w-sm w-full">
-            <h3 className="text-xl font-bold font-[family-name:var(--font-space-mono)] mb-4">Confirm Deletion</h3>
-            <p className="mb-6">Are you sure you want to delete this {deletingId.startsWith('experience') ? 'work experience' : deletingId.startsWith('project') ? 'project' : 'tech stack'}? This cannot be undone.</p>
-            <div className="flex gap-4">
-              <button 
-                onClick={confirmDelete}
-                className="brutal-btn bg-accent-red text-white flex-1 py-2 font-bold"
-              >
-                Yes, Delete
-              </button>
-              <button 
-                onClick={() => setDeletingId(null)}
-                className="brutal-btn bg-card-bg flex-1 py-2 font-bold"
-              >
-                Cancel
-              </button>
-            </div>
+        {/* Tech Stack grid */}
+        {techStacks.length === 0 ? (
+          <div className="text-center py-10 text-[var(--text-muted)]">
+            <p>No tech stack entries yet.</p>
           </div>
-        </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
+            {techStacks.map(tech => (
+              <div key={tech.id} className="table-row rounded-xl px-4 py-3 flex items-center justify-between gap-3">
+                <div className="flex items-center gap-3">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={tech.imageUrl} alt="" className="w-7 h-7 object-contain" />
+                  <span className="text-sm font-medium text-[var(--text)]">{tech.name}</span>
+                </div>
+                <div className="flex gap-1.5 shrink-0">
+                  <button onClick={() => setEditingTech(tech)} className="btn btn-sm btn-secondary p-2"><HiPencil size={12} /></button>
+                  <button onClick={() => setDeletingId(`techstack_${tech.id}`)} className="btn btn-sm btn-danger p-2"><HiTrash size={12} /></button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
+
+      {/* ── DELETE MODAL ── */}
+      {deletingId && (
+        <DeleteModal
+          label={deleteLabel}
+          onConfirm={confirmDelete}
+          onCancel={() => setDeletingId(null)}
+        />
       )}
 
-      {/* CV Extraction Modal */}
-      {extractedCVData !== null && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm px-4">
-          <div className="brutal-border brutal-shadow-lg bg-card-bg p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <h3 className="text-xl font-bold font-[family-name:var(--font-space-mono)] mb-4 bg-accent-yellow inline-block px-2 border-2 border-black">Data Extracted!</h3>
-            <p className="mb-4 text-sm font-bold">We found some data in your CV. Would you like to apply it?</p>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-              <div className="space-y-3 bg-gray-50 p-4 brutal-border text-sm">
-                <h4 className="font-bold border-b-2 border-black pb-2 mb-2">Profile Data</h4>
-                {extractedCVData.guessedName && (
-                  <div><span className="font-bold">Name:</span> {extractedCVData.guessedName}</div>
-                )}
-                {extractedCVData.title && (
-                  <div><span className="font-bold">Job Title:</span> {extractedCVData.title}</div>
-                )}
-                {extractedCVData.email && (
-                  <div><span className="font-bold">Email:</span> {extractedCVData.email}</div>
-                )}
-                {extractedCVData.phone && (
-                  <div><span className="font-bold">Phone:</span> {extractedCVData.phone}</div>
-                )}
-                {extractedCVData.linkedin && (
-                  <div><span className="font-bold">LinkedIn:</span> {extractedCVData.linkedin}</div>
-                )}
-                {extractedCVData.heroTitle && (
-                  <div><span className="font-bold">Hero Title:</span> {extractedCVData.heroTitle}</div>
-                )}
-              </div>
+      {/* ── CV EXTRACTED DATA MODAL ── */}
+      {extractedCVData && (
+        <div className="modal-overlay" role="dialog" aria-modal="true" aria-label="CV Data Extracted">
+          <div className="card max-w-2xl w-full max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="font-bold text-[var(--text)]">CV Data Extracted!</h3>
+              <button onClick={() => setExtractedCVData(null)} className="btn btn-sm btn-ghost p-1"><HiX size={16} /></button>
+            </div>
+            <p className="text-sm text-[var(--text-secondary)] mb-6">We found the following data in your CV. Would you like to apply it?</p>
 
-              {extractedCVData.experiences && extractedCVData.experiences.length > 0 && (
-                <div className="space-y-3 bg-gray-50 p-4 brutal-border text-sm overflow-y-auto max-h-48">
-                  <h4 className="font-bold border-b-2 border-black pb-2 mb-2">Work Experience ({extractedCVData.experiences.length})</h4>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 text-sm">
+              <div className="p-4 bg-[var(--surface-elevated)] rounded-xl space-y-2">
+                <p className="eyebrow mb-2">Profile Data</p>
+                {extractedCVData.guessedName && <div><span className="text-[var(--text-muted)]">Name:</span> <span className="text-[var(--text)]">{extractedCVData.guessedName}</span></div>}
+                {extractedCVData.title && <div><span className="text-[var(--text-muted)]">Title:</span> <span className="text-[var(--text)]">{extractedCVData.title}</span></div>}
+                {extractedCVData.email && <div><span className="text-[var(--text-muted)]">Email:</span> <span className="text-[var(--text)]">{extractedCVData.email}</span></div>}
+                {extractedCVData.phone && <div><span className="text-[var(--text-muted)]">Phone:</span> <span className="text-[var(--text)]">{extractedCVData.phone}</span></div>}
+              </div>
+              {extractedCVData.experiences?.length > 0 && (
+                <div className="p-4 bg-[var(--surface-elevated)] rounded-xl overflow-y-auto max-h-48">
+                  <p className="eyebrow mb-2">Experience ({extractedCVData.experiences.length})</p>
                   {extractedCVData.experiences.map((exp: any, i: number) => (
-                    <div key={i} className="mb-2 pb-2 border-b border-gray-300 last:border-0">
-                      <div className="font-bold">{exp.role} @ {exp.company}</div>
-                      <div className="text-xs opacity-75">{exp.startDate} - {exp.endDate || 'Present'}</div>
-                      <div className="text-xs line-clamp-2 mt-1">{exp.summary}</div>
+                    <div key={i} className="mb-2 pb-2 border-b border-[var(--border-color)] last:border-0 text-sm">
+                      <div className="font-semibold text-[var(--text)]">{exp.role} @ {exp.company}</div>
+                      <div className="text-xs text-[var(--text-muted)]">{exp.startDate} — {exp.endDate || 'Present'}</div>
                     </div>
                   ))}
                 </div>
               )}
-
-              {extractedCVData.projects && extractedCVData.projects.length > 0 && (
-                <div className="space-y-3 bg-gray-50 p-4 brutal-border text-sm overflow-y-auto max-h-48 md:col-span-2">
-                  <h4 className="font-bold border-b-2 border-black pb-2 mb-2">Projects ({extractedCVData.projects.length})</h4>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {extractedCVData.projects.map((proj: any, i: number) => (
-                      <div key={i} className="mb-2 pb-2 border-b md:border-b-0 border-gray-300">
-                        <div className="font-bold">{proj.title}</div>
-                        <div className="text-xs line-clamp-2 mt-1">{proj.description}</div>
-                        {proj.techStack && proj.techStack.length > 0 && (
-                          <div className="text-xs mt-1 opacity-75">Tech: {proj.techStack.join(', ')}</div>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
             </div>
 
-            <div className="flex gap-4">
-              <button 
+            <div className="flex gap-3">
+              <button
                 onClick={async () => {
-                  setProfile({
-                    ...profile,
+                  setProfile(prev => ({
+                    ...prev,
                     ...(extractedCVData.guessedName ? { fullName: extractedCVData.guessedName } : {}),
                     ...(extractedCVData.title ? { title: extractedCVData.title } : {}),
                     ...(extractedCVData.email ? { email: extractedCVData.email } : {}),
                     ...(extractedCVData.phone ? { phone: extractedCVData.phone, whatsapp: extractedCVData.phone } : {}),
                     ...(extractedCVData.linkedin ? { linkedin: extractedCVData.linkedin } : {}),
                     ...(extractedCVData.heroTitle ? { heroTitle: extractedCVData.heroTitle } : {}),
-                  });
-                  
-                  let newExperiences = [];
-                  let newProjects = [];
-
-                  // Auto-save experiences if there are any
-                  if (extractedCVData.experiences && extractedCVData.experiences.length > 0) {
-                    setMessage({ type: 'success', text: 'Saving extracted experiences...' });
+                  }))
+                  if (extractedCVData.experiences?.length) {
                     for (const exp of extractedCVData.experiences) {
-                      const res = await fetch('/api/admin/experience', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(exp)
-                      });
-                      if (res.ok) {
-                        const data = await res.json();
-                        if (data.experience) newExperiences.push(data.experience);
-                      }
+                      try {
+                        const res = await fetch('/api/admin/experience', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(exp) })
+                        if (res.ok) { const d = await res.json(); setExperiences(prev => [...prev, d.experience]) }
+                      } catch {}
                     }
                   }
-
-                  // Auto-save projects if there are any
-                  if (extractedCVData.projects && extractedCVData.projects.length > 0) {
-                    setMessage({ type: 'success', text: 'Saving extracted projects...' });
+                  if (extractedCVData.projects?.length) {
                     for (const proj of extractedCVData.projects) {
-                      const res = await fetch('/api/admin/project', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                          title: proj.title,
-                          description: proj.description,
-                          techStack: proj.techStack ? proj.techStack.join(', ') : '',
-                          imageUrl: 'https://via.placeholder.com/600x400',
-                          githubUrl: '',
-                          liveUrl: ''
-                        })
-                      });
-                      if (res.ok) {
-                        const data = await res.json();
-                        if (data.project) newProjects.push(data.project);
-                      }
+                      try {
+                        const res = await fetch('/api/admin/project', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...proj, techStack: proj.techStack?.join(', ') || '' }) })
+                        if (res.ok) { const d = await res.json(); setProjects(prev => [...prev, d.project]) }
+                      } catch {}
                     }
                   }
-
-                  if (newExperiences.length > 0) {
-                    setExperiences(prev => [...prev, ...newExperiences]);
-                  }
-                  
-                  if (newProjects.length > 0) {
-                    setProjects(prev => [...prev, ...newProjects]);
-                  }
-
-                  if (newExperiences.length > 0 || newProjects.length > 0) {
-                    router.refresh();
-                  }
-
-                  setExtractedCVData(null);
-                  setMessage({ type: 'success', text: 'Data applied! Experiences & Projects saved. Click "Save Changes" to save profile.' })
+                  setExtractedCVData(null)
+                  showToast('success', 'Data applied! Click Save Profile to save changes.')
+                  router.refresh()
                 }}
-                className="brutal-btn bg-accent-green text-\[#111\] flex-1 py-2 font-bold"
+                className="btn btn-primary flex-1"
               >
                 Apply Data
               </button>
-              <button 
-                onClick={() => setExtractedCVData(null)}
-                className="brutal-btn bg-card-bg flex-1 py-2 font-bold"
-              >
-                Ignore
-              </button>
+              <button onClick={() => setExtractedCVData(null)} className="btn btn-secondary flex-1">Ignore</button>
             </div>
           </div>
         </div>

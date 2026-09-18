@@ -1,0 +1,35 @@
+[
+  {
+    "id": 1,
+    "title": "Portfolio Website",
+    "description": "A premium personal portfolio built with Next.js, Tailwind CSS, and PostgreSQL. Features dynamic content management and responsive design.",
+    "techStack": ["Next.js", "Tailwind CSS", "PostgreSQL", "Prisma"],
+    "githubUrl": "https://github.com/bagasrr/portfolio",
+    "demoUrl": "https://bagasrr.dev",
+    "imageUrl": null,
+    "order": 1,
+    "updatedAt": "2026-09-15T00:00:00.000Z"
+  },
+  {
+    "id": 2,
+    "title": "Task Management App",
+    "description": "A full-stack task management application with real-time collaboration features. Supports kanban boards, team workspaces, and deadline tracking.",
+    "techStack": ["React", "Node.js", "Socket.io", "MongoDB"],
+    "githubUrl": "https://github.com/bagasrr/taskman",
+    "demoUrl": "https://taskman.bagasrr.dev",
+    "imageUrl": null,
+    "order": 2,
+    "updatedAt": "2026-09-15T00:00:00.000Z"
+  },
+  {
+    "id": 3,
+    "title": "E-Commerce API",
+    "description": "A RESTful API for e-commerce platforms with authentication, product management, cart system, and payment integration.",
+    "techStack": ["Express", "PostgreSQL", "JWT", "Stripe"],
+    "githubUrl": "https://github.com/bagasrr/ecommerce-api",
+    "demoUrl": null,
+    "imageUrl": null,
+    "order": 3,
+    "updatedAt": "2026-09-15T00:00:00.000Z"
+  }
+]

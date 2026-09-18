@@ -1,33 +1,59 @@
-import { prisma } from '@/lib/prisma'
+import { getProfile, getExperiences, getProjects, getTechStacks } from '@/lib/data'
 import AdminDashboard from './AdminDashboard'
+import { HiCode, HiBriefcase, HiCollection, HiUser } from 'react-icons/hi'
 
 export default async function AdminPage() {
-  const profile = await prisma.profile.findFirst()
-  const experiences = await prisma.workExperience.findMany({
-    orderBy: { startDate: 'desc' }
-  })
-  const projects = await prisma.project.findMany({
-    orderBy: { order: 'asc' }
-  })
-  const techStacks = await prisma.techStack.findMany({
-    orderBy: { order: 'asc' }
-  })
-  
+  const [profile, experiences, projects, techStacks] = await Promise.all([
+    getProfile(),
+    getExperiences(),
+    getProjects(),
+    getTechStacks(),
+  ])
+
+  const STATS = [
+    { label: 'Projects', value: projects.length, icon: HiCode, color: 'text-[var(--accent)]', bg: 'bg-[var(--dark-burgundy)]' },
+    { label: 'Experience', value: `${experiences.length} roles`, icon: HiBriefcase, color: 'text-[var(--warning)]', bg: 'bg-amber-500/10' },
+    { label: 'Technologies', value: techStacks.length, icon: HiCollection, color: 'text-[var(--success)]', bg: 'bg-emerald-500/10' },
+    { label: 'Profile', value: profile ? 'Active' : 'Not set', icon: HiUser, color: 'text-blue-400', bg: 'bg-blue-500/10' },
+  ]
+
   return (
-    <div className="max-w-4xl mx-auto">
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-4xl font-bold font-[family-name:var(--font-space-mono)]">
-          <span className="bg-accent-green px-4 py-2 brutal-border brutal-shadow inline-block">
-            Dashboard
-          </span>
+    <div className="space-y-8 max-w-5xl">
+      {/* Page header */}
+      <div>
+        <h1 className="text-2xl md:text-3xl font-bold font-[family-name:var(--font-display)] text-[var(--text)] mb-1">
+          Dashboard
         </h1>
+        <p className="text-[var(--text-muted)] text-sm">
+          Manage your portfolio content from here.
+        </p>
       </div>
-      
-      {/* Client Component for interactive forms */}
-      <AdminDashboard 
-        initialProfile={profile} 
-        initialExperiences={experiences} 
-        initialProjects={projects} 
+
+      {/* Stats */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        {STATS.map((stat) => {
+          const Icon = stat.icon
+          return (
+            <div key={stat.label} className="card flex items-center gap-4">
+              <div className={`w-10 h-10 rounded-xl ${stat.bg} flex items-center justify-center shrink-0`}>
+                <Icon size={18} className={stat.color} />
+              </div>
+              <div>
+                <p className="text-xl font-bold font-[family-name:var(--font-display)] text-[var(--text)]">
+                  {stat.value}
+                </p>
+                <p className="text-xs text-[var(--text-muted)]">{stat.label}</p>
+              </div>
+            </div>
+          )
+        })}
+      </div>
+
+      {/* Main CMS interface */}
+      <AdminDashboard
+        initialProfile={profile}
+        initialExperiences={experiences}
+        initialProjects={projects}
         initialTechStacks={techStacks}
       />
     </div>

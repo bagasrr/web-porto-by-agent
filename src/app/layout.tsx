@@ -1,34 +1,50 @@
 import type { Metadata } from "next";
-import { Space_Mono, Inter } from "next/font/google";
+import { Inter, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
-
-const spaceMono = Space_Mono({
-  variable: "--font-space-mono",
-  subsets: ["latin"],
-  weight: ["400", "700"],
-});
+import { getProfile } from "@/lib/data";
 
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
+  display: "swap",
+});
+
+const spaceGrotesk = Space_Grotesk({
+  variable: "--font-display",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
   title: "Bagas Ramadhan Rusnadi | Software Engineer",
-  description: "Personal portfolio of Bagas Ramadhan Rusnadi - Software Engineer",
+  description:
+    "Personal portfolio of Bagas Ramadhan Rusnadi — Software Engineer specializing in full-stack web development.",
+  openGraph: {
+    title: "Bagas Ramadhan Rusnadi | Software Engineer",
+    description:
+      "Personal portfolio of Bagas Ramadhan Rusnadi — Software Engineer specializing in full-stack web development.",
+    type: "website",
+  },
 };
 
-import { prisma } from '@/lib/prisma'
-
-export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const profile = await prisma.profile.findFirst()
-  const themeClass = profile?.theme ? `theme-${profile.theme}` : 'theme-light-1'
+export default async function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const profile = await getProfile();
+  const themeClass =
+    profile?.theme === "light" ? "theme-light" : "theme-dark";
 
   return (
-    <html lang="en" className={`${spaceMono.variable} ${inter.variable} ${themeClass}`}>
-      <body className="min-h-screen font-[family-name:var(--font-inter)]">
-        <Navbar />
+    <html
+      lang="en"
+      className={`${inter.variable} ${spaceGrotesk.variable} ${themeClass}`}
+    >
+      <body className="min-h-screen antialiased font-[family-name:var(--font-inter)]">
+        <Navbar profile={profile} />
         <main>{children}</main>
       </body>
     </html>
