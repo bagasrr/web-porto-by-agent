@@ -19,31 +19,21 @@ const spaceGrotesk = Space_Grotesk({
 
 export const metadata: Metadata = {
   title: "Bagas Ramadhan Rusnadi | Software Engineer",
-  description:
-    "Personal portfolio of Bagas Ramadhan Rusnadi — Software Engineer specializing in full-stack web development.",
+  description: "Personal portfolio of Bagas Ramadhan Rusnadi — Software Engineer specializing in full-stack web development.",
   openGraph: {
     title: "Bagas Ramadhan Rusnadi | Software Engineer",
-    description:
-      "Personal portfolio of Bagas Ramadhan Rusnadi — Software Engineer specializing in full-stack web development.",
+    description: "Personal portfolio of Bagas Ramadhan Rusnadi — Software Engineer specializing in full-stack web development.",
     type: "website",
   },
 };
 
-export default async function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const profile = await getProfile();
-  const themeClass =
-    profile?.theme === "light" ? "theme-light" : "theme-dark";
+  const themeClass = profile?.theme === "light" ? "theme-light" : "theme-dark";
 
   return (
-    <html
-      lang="en"
-      className={`${inter.variable} ${spaceGrotesk.variable} ${themeClass}`}
-    >
-      <body className="min-h-screen antialiased font-[family-name:var(--font-inter)]">
+    <html lang="en" className={`${inter.variable} ${spaceGrotesk.variable} ${themeClass}`}>
+      <body className="min-h-screen antialiased font-(family-name:--font-inter)">
         <Navbar profile={profile} />
         <main>{children}</main>
       </body>

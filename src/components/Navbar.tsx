@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { FaLinkedin, FaGithub } from 'react-icons/fa'
+import { usePathname } from 'next/navigation'
+import { FaLinkedin } from 'react-icons/fa'
 import { MdEmail } from 'react-icons/md'
 import { HiMenu, HiX } from 'react-icons/hi'
 
@@ -24,6 +25,7 @@ type NavbarProps = {
 }
 
 export default function Navbar({ profile }: NavbarProps) {
+  const pathname = usePathname()
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
 
@@ -32,6 +34,11 @@ export default function Navbar({ profile }: NavbarProps) {
     window.addEventListener('scroll', handler, { passive: true })
     return () => window.removeEventListener('scroll', handler)
   }, [])
+
+  // Do not render the public portfolio navbar on /admin routes
+  if (pathname?.startsWith('/admin')) {
+    return null
+  }
 
   const handleNavClick = (href: string) => {
     setMobileOpen(false)
@@ -64,6 +71,7 @@ export default function Navbar({ profile }: NavbarProps) {
             {NAV_LINKS.map((link) => (
               <button
                 key={link.label}
+                type="button"
                 onClick={() => handleNavClick(link.href)}
                 className="px-4 py-2 text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--text)] hover:bg-[var(--surface)] rounded-lg transition-all duration-150 cursor-pointer"
               >
@@ -106,13 +114,14 @@ export default function Navbar({ profile }: NavbarProps) {
             </a>
           </div>
 
-          {/* Mobile menu button */}
+          {/* Mobile menu button - strictly hidden on md+ screens */}
           <button
+            type="button"
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="md:hidden btn btn-sm btn-ghost"
+            className="flex md:!hidden items-center justify-center p-2 text-[var(--text-secondary)] hover:text-[var(--text)] hover:bg-[var(--surface)] rounded-lg transition-all"
             aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
           >
-            {mobileOpen ? <HiX size={20} /> : <HiMenu size={20} />}
+            {mobileOpen ? <HiX size={22} /> : <HiMenu size={22} />}
           </button>
         </div>
       </header>
@@ -120,7 +129,7 @@ export default function Navbar({ profile }: NavbarProps) {
       {/* Mobile drawer */}
       {mobileOpen && (
         <div
-          className="fixed inset-0 z-40 md:hidden"
+          className="fixed inset-0 z-40 md:!hidden"
           onClick={() => setMobileOpen(false)}
         >
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
@@ -131,6 +140,7 @@ export default function Navbar({ profile }: NavbarProps) {
             {NAV_LINKS.map((link) => (
               <button
                 key={link.label}
+                type="button"
                 onClick={() => handleNavClick(link.href)}
                 className="w-full text-left px-4 py-3 text-base font-medium text-[var(--text-secondary)] hover:text-[var(--text)] hover:bg-[var(--surface)] rounded-lg transition-all cursor-pointer"
               >

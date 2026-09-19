@@ -2,7 +2,20 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { HiPlus, HiPencil, HiTrash, HiX, HiCheck, HiUpload, HiExclamation } from 'react-icons/hi'
+import {
+  HiPlus,
+  HiPencil,
+  HiTrash,
+  HiX,
+  HiCheck,
+  HiUpload,
+  HiExclamation,
+  HiExternalLink,
+  HiCalendar,
+  HiBriefcase,
+  HiCode,
+} from 'react-icons/hi'
+import { FaGithub } from 'react-icons/fa'
 import type { Profile, WorkExperience, Project, TechStack } from '@/lib/data'
 
 // ──────────────────────────────────────────────────────────
@@ -17,7 +30,7 @@ function Toast({ type, text, onClose }: { type: string; text: string; onClose: (
         {type === 'success' ? <HiCheck size={15} /> : <HiExclamation size={15} />}
         <span>{text}</span>
       </div>
-      <button onClick={onClose} className="btn btn-sm btn-ghost p-1">
+      <button type="button" onClick={onClose} className="btn btn-sm btn-ghost p-1">
         <HiX size={14} />
       </button>
     </div>
@@ -47,9 +60,9 @@ function DeleteModal({
 }) {
   return (
     <div className="modal-overlay" role="dialog" aria-modal="true" aria-label={`Delete ${label}`}>
-      <div className="card max-w-sm w-full" onClick={(e) => e.stopPropagation()}>
+      <div className="card max-w-sm w-full bg-[var(--bg-secondary)] border border-[var(--border-color)] shadow-2xl" onClick={(e) => e.stopPropagation()}>
         <div className="flex items-center gap-3 mb-4">
-          <div className="w-10 h-10 rounded-xl bg-[var(--danger)]/10 border border-[var(--danger)]/30 flex items-center justify-center">
+          <div className="w-10 h-10 rounded-xl bg-[var(--danger)]/10 border border-[var(--danger)]/30 flex items-center justify-center shrink-0">
             <HiTrash size={18} className="text-[var(--danger)]" />
           </div>
           <div>
@@ -58,12 +71,21 @@ function DeleteModal({
           </div>
         </div>
         <div className="flex gap-3">
-          <button onClick={onCancel} className="btn btn-secondary flex-1">Cancel</button>
-          <button onClick={onConfirm} className="btn btn-danger flex-1">Delete</button>
+          <button type="button" onClick={onCancel} className="btn btn-secondary flex-1">Cancel</button>
+          <button type="button" onClick={onConfirm} className="btn btn-danger flex-1">Delete</button>
         </div>
       </div>
     </div>
   )
+}
+
+function formatDate(date: string | Date | null): string {
+  if (!date) return 'Present'
+  try {
+    return new Intl.DateTimeFormat('en-US', { month: 'short', year: 'numeric' }).format(new Date(date as string))
+  } catch {
+    return String(date)
+  }
 }
 
 // ──────────────────────────────────────────────────────────
@@ -105,7 +127,11 @@ export default function AdminDashboard({
 
   const formatDateForInput = (dateString: string | Date | null) => {
     if (!dateString) return ''
-    return new Date(dateString as string).toISOString().split('T')[0]
+    try {
+      return new Date(dateString as string).toISOString().split('T')[0]
+    } catch {
+      return ''
+    }
   }
 
   // ── Profile ──────────────────────────────────────────────
@@ -184,7 +210,7 @@ export default function AdminDashboard({
           ))
         }
         setEditingExp(null)
-        showToast('success', 'Experience saved!')
+        showToast('success', isNew ? 'Experience created!' : 'Experience updated!')
         router.refresh()
       } else {
         showToast('error', 'Failed to save experience.')
@@ -216,7 +242,7 @@ export default function AdminDashboard({
           setProjects(prev => prev.map(p => p.id === project.id ? project : p).sort((a, b) => (a.order || 0) - (b.order || 0)))
         }
         setEditingProj(null)
-        showToast('success', 'Project saved!')
+        showToast('success', isNew ? 'Project created!' : 'Project updated!')
         router.refresh()
       } else {
         showToast('error', 'Failed to save project.')
@@ -379,90 +405,122 @@ export default function AdminDashboard({
       <section id="experience" className="card">
         <SectionHeader
           title="Work Experience"
-          description={`${experiences.length} entries`}
+          description={`${experiences.length} career milestones`}
           action={
-            !editingExp ? (
-              <button
-                onClick={() => setEditingExp({ id: 0, company: '', role: '', startDate: '', endDate: null, summary: '', description: '', techStack: [], order: 0 })}
-                className="btn btn-primary btn-sm"
-              >
-                <HiPlus size={15} /> Add Experience
-              </button>
-            ) : null
+            <button
+              type="button"
+              onClick={() =>
+                setEditingExp({
+                  id: 0,
+                  company: '',
+                  role: '',
+                  startDate: new Date().toISOString().split('T')[0],
+                  endDate: null,
+                  summary: '',
+                  description: '',
+                  techStack: [],
+                  order: experiences.length + 1,
+                })
+              }
+              className="btn btn-primary btn-sm"
+            >
+              <HiPlus size={15} /> Add Experience
+            </button>
           }
         />
 
-        {/* Experience Form */}
-        {editingExp && (
-          <div className="mb-6 p-5 bg-[var(--surface-elevated)] border border-[var(--accent-border)] rounded-xl">
-            <h3 className="text-sm font-bold text-[var(--text)] mb-4">
-              {editingExp.id ? 'Edit Experience' : 'New Experience'}
-            </h3>
-            <form onSubmit={saveExperience} className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="label" htmlFor="exp-company">Company</label>
-                  <input id="exp-company" type="text" className="input" value={editingExp.company || ''} onChange={e => setEditingExp(ex => ({ ...ex!, company: e.target.value }))} required />
-                </div>
-                <div>
-                  <label className="label" htmlFor="exp-role">Role / Title</label>
-                  <input id="exp-role" type="text" className="input" value={editingExp.role || ''} onChange={e => setEditingExp(ex => ({ ...ex!, role: e.target.value }))} required />
-                </div>
-                <div>
-                  <label className="label" htmlFor="exp-start">Start Date</label>
-                  <input id="exp-start" type="date" className="input" value={formatDateForInput(editingExp.startDate)} onChange={e => setEditingExp(ex => ({ ...ex!, startDate: e.target.value }))} required />
-                </div>
-                <div>
-                  <label className="label" htmlFor="exp-end">End Date (blank = Present)</label>
-                  <input id="exp-end" type="date" className="input" value={formatDateForInput(editingExp.endDate)} onChange={e => setEditingExp(ex => ({ ...ex!, endDate: e.target.value || null }))} />
-                </div>
-              </div>
-              <div>
-                <label className="label" htmlFor="exp-summary">Short Summary</label>
-                <input id="exp-summary" type="text" className="input" value={editingExp.summary || ''} onChange={e => setEditingExp(ex => ({ ...ex!, summary: e.target.value }))} required />
-              </div>
-              <div>
-                <label className="label" htmlFor="exp-desc">Full Description</label>
-                <textarea id="exp-desc" className="input" rows={4} value={editingExp.description || ''} onChange={e => setEditingExp(ex => ({ ...ex!, description: e.target.value }))} required />
-              </div>
-              <div>
-                <label className="label" htmlFor="exp-tech">Tech Stack (comma separated)</label>
-                <input id="exp-tech" type="text" className="input" placeholder="React, Next.js, TypeScript..." value={Array.isArray(editingExp.techStack) ? editingExp.techStack.join(', ') : (editingExp.techStack || '')} onChange={e => setEditingExp(ex => ({ ...ex!, techStack: e.target.value.split(',').map(s => s.trim()).filter(Boolean) }))} required />
-              </div>
-              <div className="flex gap-3">
-                <button type="submit" disabled={saving} className="btn btn-primary">
-                  {saving ? 'Saving...' : 'Save'}
-                </button>
-                <button type="button" onClick={() => setEditingExp(null)} className="btn btn-secondary">
-                  Cancel
-                </button>
-              </div>
-            </form>
-          </div>
-        )}
-
-        {/* Experience list */}
+        {/* Experience Cards Grid */}
         {experiences.length === 0 ? (
-          <div className="text-center py-10 text-[var(--text-muted)]">
-            <p className="mb-3">No experiences yet.</p>
-            <button onClick={() => setEditingExp({ id: 0, company: '', role: '', startDate: '', endDate: null, summary: '', description: '', techStack: [], order: 0 })} className="btn btn-secondary btn-sm">
+          <div className="text-center py-12 px-4 rounded-xl border border-dashed border-[var(--border-color)] bg-[var(--surface-elevated)] text-[var(--text-muted)]">
+            <HiBriefcase size={36} className="mx-auto mb-3 opacity-40 text-[var(--accent)]" />
+            <p className="font-semibold text-[var(--text)] mb-1">No work experiences yet</p>
+            <p className="text-xs mb-4">Add your professional milestones to display on your portfolio.</p>
+            <button
+              type="button"
+              onClick={() =>
+                setEditingExp({
+                  id: 0,
+                  company: '',
+                  role: '',
+                  startDate: new Date().toISOString().split('T')[0],
+                  endDate: null,
+                  summary: '',
+                  description: '',
+                  techStack: [],
+                  order: 1,
+                })
+              }
+              className="btn btn-secondary btn-sm"
+            >
               <HiPlus size={14} /> Add your first role
             </button>
           </div>
         ) : (
-          <div className="space-y-2">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {experiences.map(exp => (
-              <div key={exp.id} className="table-row rounded-xl px-4 py-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+              <div
+                key={exp.id}
+                className="card card-hover flex flex-col justify-between bg-[var(--surface-elevated)] border border-[var(--border-color)] p-5 rounded-2xl relative group"
+              >
                 <div>
-                  <p className="font-semibold text-[var(--text)] text-sm">{exp.role}</p>
-                  <p className="text-xs text-[var(--accent)]">{exp.company}</p>
-                  <p className="text-xs text-[var(--text-muted)] mt-0.5">
-                    {new Date(exp.startDate as string).getFullYear()} — {exp.endDate ? new Date(exp.endDate as string).getFullYear() : 'Present'}
+                  <div className="flex items-start justify-between gap-3 mb-2">
+                    <div className="min-w-0 flex-1">
+                      <h3 className="font-bold text-base text-[var(--text)] leading-snug truncate">
+                        {exp.role}
+                      </h3>
+                      <p className="text-sm font-semibold text-[var(--accent)] mt-0.5 truncate">
+                        {exp.company}
+                      </p>
+                    </div>
+                    <span className="badge badge-primary text-xs shrink-0 whitespace-nowrap">
+                      {formatDate(exp.startDate)} — {exp.endDate ? formatDate(exp.endDate) : 'Present'}
+                    </span>
+                  </div>
+
+                  <p className="text-xs text-[var(--text-secondary)] line-clamp-2 mb-2 mt-2 leading-relaxed">
+                    {exp.summary}
                   </p>
+
+                  {exp.description && (
+                    <p className="text-[11px] text-[var(--text-muted)] line-clamp-2 mb-3 leading-relaxed opacity-80">
+                      {exp.description}
+                    </p>
+                  )}
+
+                  {exp.techStack && exp.techStack.length > 0 && (
+                    <div className="flex flex-wrap gap-1.5 mb-4">
+                      {exp.techStack.slice(0, 5).map(tech => (
+                        <span key={tech} className="badge badge-muted text-[10px] px-2 py-0.5">
+                          {tech}
+                        </span>
+                      ))}
+                      {exp.techStack.length > 5 && (
+                        <span className="badge badge-muted text-[10px] px-2 py-0.5">
+                          +{exp.techStack.length - 5}
+                        </span>
+                      )}
+                    </div>
+                  )}
                 </div>
-                <div className="flex gap-2 shrink-0">
-                  <button onClick={() => setEditingExp(exp)} className="btn btn-sm btn-secondary"><HiPencil size={13} /> Edit</button>
-                  <button onClick={() => setDeletingId(`experience_${exp.id}`)} className="btn btn-sm btn-danger"><HiTrash size={13} /></button>
+
+                <div className="pt-3 border-t border-[var(--border-color)] flex items-center justify-between mt-auto">
+                  <span className="text-[11px] text-[var(--text-muted)]">Order: #{exp.order || 0}</span>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setEditingExp(exp)}
+                      className="btn btn-sm btn-secondary text-xs py-1.5 px-3"
+                    >
+                      <HiPencil size={13} /> Edit
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setDeletingId(`experience_${exp.id}`)}
+                      className="btn btn-sm btn-danger text-xs py-1.5 px-3"
+                    >
+                      <HiTrash size={13} /> Delete
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}
@@ -474,85 +532,148 @@ export default function AdminDashboard({
       <section id="projects" className="card">
         <SectionHeader
           title="Projects"
-          description={`${projects.length} entries`}
+          description={`${projects.length} portfolio items`}
           action={
-            !editingProj ? (
-              <button
-                onClick={() => setEditingProj({ id: 0, title: '', description: '', techStack: [], githubUrl: '', demoUrl: '', imageUrl: '', order: 0 })}
-                className="btn btn-primary btn-sm"
-              >
-                <HiPlus size={15} /> Add Project
-              </button>
-            ) : null
+            <button
+              type="button"
+              onClick={() =>
+                setEditingProj({
+                  id: 0,
+                  title: '',
+                  description: '',
+                  techStack: [],
+                  githubUrl: '',
+                  demoUrl: '',
+                  imageUrl: '',
+                  order: projects.length + 1,
+                })
+              }
+              className="btn btn-primary btn-sm"
+            >
+              <HiPlus size={15} /> Add Project
+            </button>
           }
         />
 
-        {/* Project Form */}
-        {editingProj && (
-          <div className="mb-6 p-5 bg-[var(--surface-elevated)] border border-[var(--accent-border)] rounded-xl">
-            <h3 className="text-sm font-bold text-[var(--text)] mb-4">
-              {editingProj.id ? 'Edit Project' : 'New Project'}
-            </h3>
-            <form onSubmit={saveProject} className="space-y-4">
-              <div>
-                <label className="label" htmlFor="proj-title">Project Title</label>
-                <input id="proj-title" type="text" className="input" value={editingProj.title || ''} onChange={e => setEditingProj(p => ({ ...p!, title: e.target.value }))} required />
-              </div>
-              <div>
-                <label className="label" htmlFor="proj-desc">Description</label>
-                <textarea id="proj-desc" className="input" rows={3} value={editingProj.description || ''} onChange={e => setEditingProj(p => ({ ...p!, description: e.target.value }))} required />
-              </div>
-              <div>
-                <label className="label" htmlFor="proj-tech">Tech Stack (comma separated)</label>
-                <input id="proj-tech" type="text" className="input" placeholder="React, Node.js, Postgres..." value={Array.isArray(editingProj.techStack) ? editingProj.techStack.join(', ') : (editingProj.techStack || '')} onChange={e => setEditingProj(p => ({ ...p!, techStack: e.target.value.split(',').map(s => s.trim()).filter(Boolean) }))} required />
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="label" htmlFor="proj-github">GitHub URL</label>
-                  <input id="proj-github" type="url" className="input" value={editingProj.githubUrl || ''} onChange={e => setEditingProj(p => ({ ...p!, githubUrl: e.target.value }))} />
-                </div>
-                <div>
-                  <label className="label" htmlFor="proj-demo">Demo URL</label>
-                  <input id="proj-demo" type="url" className="input" value={editingProj.demoUrl || ''} onChange={e => setEditingProj(p => ({ ...p!, demoUrl: e.target.value }))} />
-                </div>
-                <div>
-                  <label className="label" htmlFor="proj-image">Image URL (optional)</label>
-                  <input id="proj-image" type="text" className="input" value={editingProj.imageUrl || ''} onChange={e => setEditingProj(p => ({ ...p!, imageUrl: e.target.value }))} />
-                </div>
-                <div>
-                  <label className="label" htmlFor="proj-order">Sort Order</label>
-                  <input id="proj-order" type="number" className="input" value={editingProj.order || 0} onChange={e => setEditingProj(p => ({ ...p!, order: parseInt(e.target.value) || 0 }))} />
-                </div>
-              </div>
-              <div className="flex gap-3">
-                <button type="submit" disabled={saving} className="btn btn-primary">
-                  {saving ? 'Saving...' : 'Save'}
-                </button>
-                <button type="button" onClick={() => setEditingProj(null)} className="btn btn-secondary">Cancel</button>
-              </div>
-            </form>
-          </div>
-        )}
-
-        {/* Project list */}
+        {/* Project Cards Grid */}
         {projects.length === 0 ? (
-          <div className="text-center py-10 text-[var(--text-muted)]">
-            <p className="mb-3">No projects yet.</p>
-            <button onClick={() => setEditingProj({ id: 0, title: '', description: '', techStack: [], githubUrl: '', demoUrl: '', imageUrl: '', order: 0 })} className="btn btn-secondary btn-sm">
+          <div className="text-center py-12 px-4 rounded-xl border border-dashed border-[var(--border-color)] bg-[var(--surface-elevated)] text-[var(--text-muted)]">
+            <HiCode size={36} className="mx-auto mb-3 opacity-40 text-[var(--accent)]" />
+            <p className="font-semibold text-[var(--text)] mb-1">No projects yet</p>
+            <p className="text-xs mb-4">Add your showcase applications to display on your portfolio.</p>
+            <button
+              type="button"
+              onClick={() =>
+                setEditingProj({
+                  id: 0,
+                  title: '',
+                  description: '',
+                  techStack: [],
+                  githubUrl: '',
+                  demoUrl: '',
+                  imageUrl: '',
+                  order: 1,
+                })
+              }
+              className="btn btn-secondary btn-sm"
+            >
               <HiPlus size={14} /> Add your first project
             </button>
           </div>
         ) : (
-          <div className="space-y-2">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {projects.map(proj => (
-              <div key={proj.id} className="table-row rounded-xl px-4 py-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+              <div
+                key={proj.id}
+                className="card card-hover flex flex-col justify-between bg-[var(--surface-elevated)] border border-[var(--border-color)] p-5 rounded-2xl relative group"
+              >
                 <div>
-                  <p className="font-semibold text-[var(--text)] text-sm">{proj.title}</p>
-                  <p className="text-xs text-[var(--text-muted)] line-clamp-1 mt-0.5">{proj.description}</p>
+                  {/* Thumbnail */}
+                  {proj.imageUrl ? (
+                    <div className="h-32 w-full rounded-xl mb-3 overflow-hidden bg-[var(--surface)] border border-[var(--border-color)] relative">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={proj.imageUrl} alt={proj.title} className="w-full h-full object-cover" />
+                    </div>
+                  ) : (
+                    <div className="h-20 w-full rounded-xl mb-3 bg-gradient-to-br from-[var(--dark-burgundy)]/40 to-[var(--surface)] border border-[var(--border-color)] flex items-center justify-center text-xs text-[var(--text-muted)] font-mono">
+                      <span>{proj.title}</span>
+                    </div>
+                  )}
+
+                  <div className="flex items-start justify-between gap-2 mb-1">
+                    <h3 className="font-bold text-base text-[var(--text)] leading-snug line-clamp-1">
+                      {proj.title}
+                    </h3>
+                    <span className="badge badge-primary text-[10px] shrink-0">
+                      #{proj.order || 0}
+                    </span>
+                  </div>
+
+                  <p className="text-xs text-[var(--text-secondary)] line-clamp-2 mb-3 leading-relaxed">
+                    {proj.description}
+                  </p>
+
+                  {proj.techStack && proj.techStack.length > 0 && (
+                    <div className="flex flex-wrap gap-1.5 mb-3">
+                      {proj.techStack.slice(0, 4).map(tech => (
+                        <span key={tech} className="badge badge-muted text-[10px] px-2 py-0.5">
+                          {tech}
+                        </span>
+                      ))}
+                      {proj.techStack.length > 4 && (
+                        <span className="badge badge-muted text-[10px] px-2 py-0.5">
+                          +{proj.techStack.length - 4}
+                        </span>
+                      )}
+                    </div>
+                  )}
+
+                  {(proj.githubUrl || proj.demoUrl) && (
+                    <div className="flex items-center gap-3 text-xs text-[var(--text-muted)] mb-3 pt-1">
+                      {proj.githubUrl && (
+                        <a
+                          href={proj.githubUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="hover:text-[var(--accent)] flex items-center gap-1 transition-colors"
+                        >
+                          <FaGithub size={12} />
+                          <span>Code</span>
+                        </a>
+                      )}
+                      {proj.demoUrl && (
+                        <a
+                          href={proj.demoUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="hover:text-[var(--accent)] flex items-center gap-1 transition-colors"
+                        >
+                          <HiExternalLink size={13} />
+                          <span>Live Demo</span>
+                        </a>
+                      )}
+                    </div>
+                  )}
                 </div>
-                <div className="flex gap-2 shrink-0">
-                  <button onClick={() => setEditingProj(proj)} className="btn btn-sm btn-secondary"><HiPencil size={13} /> Edit</button>
-                  <button onClick={() => setDeletingId(`project_${proj.id}`)} className="btn btn-sm btn-danger"><HiTrash size={13} /></button>
+
+                <div className="pt-3 border-t border-[var(--border-color)] flex items-center justify-between mt-auto">
+                  <span className="text-[11px] text-[var(--text-muted)]">Order: #{proj.order || 0}</span>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setEditingProj(proj)}
+                      className="btn btn-sm btn-secondary text-xs py-1.5 px-3"
+                    >
+                      <HiPencil size={13} /> Edit
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setDeletingId(`project_${proj.id}`)}
+                      className="btn btn-sm btn-danger text-xs py-1.5 px-3"
+                    >
+                      <HiTrash size={13} /> Delete
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}
@@ -568,7 +689,8 @@ export default function AdminDashboard({
           action={
             !editingTech ? (
               <button
-                onClick={() => setEditingTech({ id: 0, name: '', imageUrl: '', order: 0 })}
+                type="button"
+                onClick={() => setEditingTech({ id: 0, name: '', imageUrl: '', order: techStacks.length + 1 })}
                 className="btn btn-primary btn-sm"
               >
                 <HiPlus size={15} /> Add Tech
@@ -577,14 +699,14 @@ export default function AdminDashboard({
           }
         />
 
-        {/* Tech Form */}
+        {/* Tech Form (Inline edit for quick icon adjustments) */}
         {editingTech && (
           <div className="mb-6 p-5 bg-[var(--surface-elevated)] border border-[var(--accent-border)] rounded-xl">
             <h3 className="text-sm font-bold text-[var(--text)] mb-4">
               {editingTech.id ? 'Edit Tech' : 'New Tech'}
             </h3>
             <form onSubmit={saveTechStack} className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
                   <label className="label" htmlFor="tech-name">Name</label>
                   <input id="tech-name" type="text" className="input" value={editingTech.name || ''} onChange={e => setEditingTech(t => ({ ...t!, name: e.target.value }))} required />
@@ -623,8 +745,8 @@ export default function AdminDashboard({
                   <span className="text-sm font-medium text-[var(--text)]">{tech.name}</span>
                 </div>
                 <div className="flex gap-1.5 shrink-0">
-                  <button onClick={() => setEditingTech(tech)} className="btn btn-sm btn-secondary p-2"><HiPencil size={12} /></button>
-                  <button onClick={() => setDeletingId(`techstack_${tech.id}`)} className="btn btn-sm btn-danger p-2"><HiTrash size={12} /></button>
+                  <button type="button" onClick={() => setEditingTech(tech)} className="btn btn-sm btn-secondary p-2"><HiPencil size={12} /></button>
+                  <button type="button" onClick={() => setDeletingId(`techstack_${tech.id}`)} className="btn btn-sm btn-danger p-2"><HiTrash size={12} /></button>
                 </div>
               </div>
             ))}
@@ -632,7 +754,321 @@ export default function AdminDashboard({
         )}
       </section>
 
-      {/* ── DELETE MODAL ── */}
+      {/* ── EXPERIENCE EDIT/CREATE MODAL BOX ── */}
+      {editingExp && (
+        <div
+          className="modal-overlay"
+          role="dialog"
+          aria-modal="true"
+          aria-label={editingExp.id ? 'Edit Experience' : 'New Experience'}
+          onClick={() => setEditingExp(null)}
+        >
+          <div
+            className="card max-w-2xl w-full max-h-[90vh] flex flex-col bg-[var(--bg-secondary)] border border-[var(--accent-border)] shadow-2xl rounded-2xl p-6"
+            onClick={e => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div className="flex items-center justify-between pb-4 border-b border-[var(--border-color)]">
+              <div>
+                <h3 className="text-lg font-bold font-[family-name:var(--font-display)] text-[var(--text)]">
+                  {editingExp.id ? 'Edit Work Experience' : 'Add New Work Experience'}
+                </h3>
+                <p className="text-xs text-[var(--text-muted)] mt-0.5">
+                  {editingExp.id ? 'Update role details, dates, and technologies.' : 'Fill in the information to add a career milestone.'}
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setEditingExp(null)}
+                className="btn btn-sm btn-ghost p-1.5 text-[var(--text-muted)] hover:text-[var(--text)]"
+                aria-label="Close modal"
+              >
+                <HiX size={18} />
+              </button>
+            </div>
+
+            {/* Modal Form */}
+            <form onSubmit={saveExperience} className="space-y-4 overflow-y-auto py-4 pr-1">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="label" htmlFor="modal-exp-company">Company *</label>
+                  <input
+                    id="modal-exp-company"
+                    type="text"
+                    className="input"
+                    placeholder="e.g. Google, Tech Startup"
+                    value={editingExp.company || ''}
+                    onChange={e => setEditingExp(ex => ({ ...ex!, company: e.target.value }))}
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="label" htmlFor="modal-exp-role">Role / Job Title *</label>
+                  <input
+                    id="modal-exp-role"
+                    type="text"
+                    className="input"
+                    placeholder="e.g. Senior Software Engineer"
+                    value={editingExp.role || ''}
+                    onChange={e => setEditingExp(ex => ({ ...ex!, role: e.target.value }))}
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="label" htmlFor="modal-exp-start">Start Date *</label>
+                  <input
+                    id="modal-exp-start"
+                    type="date"
+                    className="input"
+                    value={formatDateForInput(editingExp.startDate)}
+                    onChange={e => setEditingExp(ex => ({ ...ex!, startDate: e.target.value }))}
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="label" htmlFor="modal-exp-end">End Date (blank = Present)</label>
+                  <input
+                    id="modal-exp-end"
+                    type="date"
+                    className="input"
+                    value={formatDateForInput(editingExp.endDate)}
+                    onChange={e => setEditingExp(ex => ({ ...ex!, endDate: e.target.value || null }))}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="label" htmlFor="modal-exp-summary">Short Summary *</label>
+                <input
+                  id="modal-exp-summary"
+                  type="text"
+                  className="input"
+                  placeholder="One-sentence highlight of your achievements"
+                  value={editingExp.summary || ''}
+                  onChange={e => setEditingExp(ex => ({ ...ex!, summary: e.target.value }))}
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="label" htmlFor="modal-exp-desc">Full Description *</label>
+                <textarea
+                  id="modal-exp-desc"
+                  className="input"
+                  rows={4}
+                  placeholder="Detailed breakdown of responsibilities, impact, and projects..."
+                  value={editingExp.description || ''}
+                  onChange={e => setEditingExp(ex => ({ ...ex!, description: e.target.value }))}
+                  required
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div className="sm:col-span-2">
+                  <label className="label" htmlFor="modal-exp-tech">Tech Stack (comma separated) *</label>
+                  <input
+                    id="modal-exp-tech"
+                    type="text"
+                    className="input"
+                    placeholder="React, Next.js, TypeScript, PostgreSQL..."
+                    value={Array.isArray(editingExp.techStack) ? editingExp.techStack.join(', ') : (editingExp.techStack || '')}
+                    onChange={e =>
+                      setEditingExp(ex => ({
+                        ...ex!,
+                        techStack: e.target.value.split(',').map(s => s.trim()).filter(Boolean),
+                      }))
+                    }
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="label" htmlFor="modal-exp-order">Sort Order</label>
+                  <input
+                    id="modal-exp-order"
+                    type="number"
+                    className="input"
+                    value={editingExp.order || 0}
+                    onChange={e => setEditingExp(ex => ({ ...ex!, order: parseInt(e.target.value) || 0 }))}
+                  />
+                </div>
+              </div>
+
+              {/* Modal Footer */}
+              <div className="flex items-center justify-end gap-3 pt-4 border-t border-[var(--border-color)]">
+                <button
+                  type="button"
+                  onClick={() => setEditingExp(null)}
+                  className="btn btn-secondary"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={saving}
+                  className="btn btn-primary"
+                >
+                  {saving ? 'Saving...' : editingExp.id ? 'Save Changes' : 'Create Experience'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* ── PROJECT EDIT/CREATE MODAL BOX ── */}
+      {editingProj && (
+        <div
+          className="modal-overlay"
+          role="dialog"
+          aria-modal="true"
+          aria-label={editingProj.id ? 'Edit Project' : 'New Project'}
+          onClick={() => setEditingProj(null)}
+        >
+          <div
+            className="card max-w-2xl w-full max-h-[90vh] flex flex-col bg-[var(--bg-secondary)] border border-[var(--accent-border)] shadow-2xl rounded-2xl p-6"
+            onClick={e => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div className="flex items-center justify-between pb-4 border-b border-[var(--border-color)]">
+              <div>
+                <h3 className="text-lg font-bold font-[family-name:var(--font-display)] text-[var(--text)]">
+                  {editingProj.id ? 'Edit Project' : 'Add New Project'}
+                </h3>
+                <p className="text-xs text-[var(--text-muted)] mt-0.5">
+                  {editingProj.id ? 'Update project information, links, and technologies.' : 'Fill in the information to feature a new project.'}
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setEditingProj(null)}
+                className="btn btn-sm btn-ghost p-1.5 text-[var(--text-muted)] hover:text-[var(--text)]"
+                aria-label="Close modal"
+              >
+                <HiX size={18} />
+              </button>
+            </div>
+
+            {/* Modal Form */}
+            <form onSubmit={saveProject} className="space-y-4 overflow-y-auto py-4 pr-1">
+              <div>
+                <label className="label" htmlFor="modal-proj-title">Project Title *</label>
+                <input
+                  id="modal-proj-title"
+                  type="text"
+                  className="input"
+                  placeholder="e.g. AI-Powered Dashboard"
+                  value={editingProj.title || ''}
+                  onChange={e => setEditingProj(p => ({ ...p!, title: e.target.value }))}
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="label" htmlFor="modal-proj-desc">Description *</label>
+                <textarea
+                  id="modal-proj-desc"
+                  className="input"
+                  rows={3}
+                  placeholder="What does this project do and what problem does it solve?"
+                  value={editingProj.description || ''}
+                  onChange={e => setEditingProj(p => ({ ...p!, description: e.target.value }))}
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="label" htmlFor="modal-proj-tech">Tech Stack (comma separated) *</label>
+                <input
+                  id="modal-proj-tech"
+                  type="text"
+                  className="input"
+                  placeholder="Next.js, Tailwind CSS, PostgreSQL, Prisma..."
+                  value={Array.isArray(editingProj.techStack) ? editingProj.techStack.join(', ') : (editingProj.techStack || '')}
+                  onChange={e =>
+                    setEditingProj(p => ({
+                      ...p!,
+                      techStack: e.target.value.split(',').map(s => s.trim()).filter(Boolean),
+                    }))
+                  }
+                  required
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="label" htmlFor="modal-proj-github">GitHub URL</label>
+                  <input
+                    id="modal-proj-github"
+                    type="url"
+                    className="input"
+                    placeholder="https://github.com/username/repo"
+                    value={editingProj.githubUrl || ''}
+                    onChange={e => setEditingProj(p => ({ ...p!, githubUrl: e.target.value }))}
+                  />
+                </div>
+                <div>
+                  <label className="label" htmlFor="modal-proj-demo">Demo URL</label>
+                  <input
+                    id="modal-proj-demo"
+                    type="url"
+                    className="input"
+                    placeholder="https://my-app.vercel.app"
+                    value={editingProj.demoUrl || ''}
+                    onChange={e => setEditingProj(p => ({ ...p!, demoUrl: e.target.value }))}
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div className="sm:col-span-2">
+                  <label className="label" htmlFor="modal-proj-image">Image URL (optional)</label>
+                  <input
+                    id="modal-proj-image"
+                    type="text"
+                    className="input"
+                    placeholder="/assets/project-preview.png or https://..."
+                    value={editingProj.imageUrl || ''}
+                    onChange={e => setEditingProj(p => ({ ...p!, imageUrl: e.target.value }))}
+                  />
+                </div>
+                <div>
+                  <label className="label" htmlFor="modal-proj-order">Sort Order</label>
+                  <input
+                    id="modal-proj-order"
+                    type="number"
+                    className="input"
+                    value={editingProj.order || 0}
+                    onChange={e => setEditingProj(p => ({ ...p!, order: parseInt(e.target.value) || 0 }))}
+                  />
+                </div>
+              </div>
+
+              {/* Modal Footer */}
+              <div className="flex items-center justify-end gap-3 pt-4 border-t border-[var(--border-color)]">
+                <button
+                  type="button"
+                  onClick={() => setEditingProj(null)}
+                  className="btn btn-secondary"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={saving}
+                  className="btn btn-primary"
+                >
+                  {saving ? 'Saving...' : editingProj.id ? 'Save Changes' : 'Create Project'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* ── DELETE CONFIRMATION MODAL ── */}
       {deletingId && (
         <DeleteModal
           label={deleteLabel}
@@ -644,23 +1080,23 @@ export default function AdminDashboard({
       {/* ── CV EXTRACTED DATA MODAL ── */}
       {extractedCVData && (
         <div className="modal-overlay" role="dialog" aria-modal="true" aria-label="CV Data Extracted">
-          <div className="card max-w-2xl w-full max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+          <div className="card max-w-2xl w-full max-h-[90vh] overflow-y-auto bg-[var(--bg-secondary)] border border-[var(--accent-border)] shadow-2xl p-6" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-bold text-[var(--text)]">CV Data Extracted!</h3>
-              <button onClick={() => setExtractedCVData(null)} className="btn btn-sm btn-ghost p-1"><HiX size={16} /></button>
+              <button type="button" onClick={() => setExtractedCVData(null)} className="btn btn-sm btn-ghost p-1"><HiX size={16} /></button>
             </div>
             <p className="text-sm text-[var(--text-secondary)] mb-6">We found the following data in your CV. Would you like to apply it?</p>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 text-sm">
-              <div className="p-4 bg-[var(--surface-elevated)] rounded-xl space-y-2">
+              <div className="p-4 bg-[var(--surface-elevated)] rounded-xl space-y-2 border border-[var(--border-color)]">
                 <p className="eyebrow mb-2">Profile Data</p>
-                {extractedCVData.guessedName && <div><span className="text-[var(--text-muted)]">Name:</span> <span className="text-[var(--text)]">{extractedCVData.guessedName}</span></div>}
-                {extractedCVData.title && <div><span className="text-[var(--text-muted)]">Title:</span> <span className="text-[var(--text)]">{extractedCVData.title}</span></div>}
-                {extractedCVData.email && <div><span className="text-[var(--text-muted)]">Email:</span> <span className="text-[var(--text)]">{extractedCVData.email}</span></div>}
-                {extractedCVData.phone && <div><span className="text-[var(--text-muted)]">Phone:</span> <span className="text-[var(--text)]">{extractedCVData.phone}</span></div>}
+                {extractedCVData.guessedName && <div><span className="text-[var(--text-muted)]">Name:</span> <span className="text-[var(--text)] font-medium">{extractedCVData.guessedName}</span></div>}
+                {extractedCVData.title && <div><span className="text-[var(--text-muted)]">Title:</span> <span className="text-[var(--text)] font-medium">{extractedCVData.title}</span></div>}
+                {extractedCVData.email && <div><span className="text-[var(--text-muted)]">Email:</span> <span className="text-[var(--text)] font-medium">{extractedCVData.email}</span></div>}
+                {extractedCVData.phone && <div><span className="text-[var(--text-muted)]">Phone:</span> <span className="text-[var(--text)] font-medium">{extractedCVData.phone}</span></div>}
               </div>
               {extractedCVData.experiences?.length > 0 && (
-                <div className="p-4 bg-[var(--surface-elevated)] rounded-xl overflow-y-auto max-h-48">
+                <div className="p-4 bg-[var(--surface-elevated)] rounded-xl overflow-y-auto max-h-48 border border-[var(--border-color)]">
                   <p className="eyebrow mb-2">Experience ({extractedCVData.experiences.length})</p>
                   {extractedCVData.experiences.map((exp: any, i: number) => (
                     <div key={i} className="mb-2 pb-2 border-b border-[var(--border-color)] last:border-0 text-sm">
@@ -674,6 +1110,7 @@ export default function AdminDashboard({
 
             <div className="flex gap-3">
               <button
+                type="button"
                 onClick={async () => {
                   setProfile(prev => ({
                     ...prev,
@@ -708,7 +1145,7 @@ export default function AdminDashboard({
               >
                 Apply Data
               </button>
-              <button onClick={() => setExtractedCVData(null)} className="btn btn-secondary flex-1">Ignore</button>
+              <button type="button" onClick={() => setExtractedCVData(null)} className="btn btn-secondary flex-1">Ignore</button>
             </div>
           </div>
         </div>

@@ -27,22 +27,22 @@
 /* ── DARK THEME (default) ──────────────────────────────── */
 :root,
 .theme-dark {
-  --bg: #10070D;
-  --bg-secondary: #180A12;
-  --surface: #21101A;
-  --surface-elevated: #2C1520;
-  --primary: #8F1D3F;
-  --primary-hover: #A6264D;
-  --dark-burgundy: #3D0B1F;
-  --accent: #D94A70;
-  --text: #F8F3F5;
-  --text-secondary: #C8B9BF;
-  --text-muted: #8F7D85;
-  --border-color: rgba(255,255,255,0.10);
-  --accent-border: rgba(143,29,63,0.45);
-  --success: #5FCB91;
-  --warning: #E7B75C;
-  --danger: #E05B69;
+  --bg: #10070d;
+  --bg-secondary: #180a12;
+  --surface: #21101a;
+  --surface-elevated: #2c1520;
+  --primary: #8f1d3f;
+  --primary-hover: #a6264d;
+  --dark-burgundy: #3d0b1f;
+  --accent: #d94a70;
+  --text: #f8f3f5;
+  --text-secondary: #c8b9bf;
+  --text-muted: #8f7d85;
+  --border-color: rgba(255, 255, 255, 0.1);
+  --accent-border: rgba(143, 29, 63, 0.45);
+  --success: #5fcb91;
+  --warning: #e7b75c;
+  --danger: #e05b69;
   --glow-primary: rgba(143, 29, 63, 0.3);
   --glow-accent: rgba(217, 74, 112, 0.2);
   color-scheme: dark;
@@ -50,29 +50,31 @@
 
 /* ── LIGHT THEME ───────────────────────────────────────── */
 .theme-light {
-  --bg: #FAF7F8;
-  --bg-secondary: #F4ECEF;
-  --surface: #FFFFFF;
-  --surface-elevated: #FDF9FB;
-  --primary: #8F1D3F;
-  --primary-hover: #64132F;
-  --dark-burgundy: #F4ECEF;
-  --accent: #8F1D3F;
-  --text: #24151B;
-  --text-secondary: #66555D;
-  --text-muted: #9C8B93;
-  --border-color: #E7DDE1;
+  --bg: #faf7f8;
+  --bg-secondary: #f4ecef;
+  --surface: #ffffff;
+  --surface-elevated: #fdf9fb;
+  --primary: #8f1d3f;
+  --primary-hover: #64132f;
+  --dark-burgundy: #f4ecef;
+  --accent: #8f1d3f;
+  --text: #24151b;
+  --text-secondary: #66555d;
+  --text-muted: #9c8b93;
+  --border-color: #e7dde1;
   --accent-border: rgba(143, 29, 63, 0.25);
-  --success: #1E7A4B;
-  --warning: #A06B10;
-  --danger: #C0273A;
+  --success: #1e7a4b;
+  --warning: #a06b10;
+  --danger: #c0273a;
   --glow-primary: rgba(143, 29, 63, 0.08);
   --glow-accent: rgba(143, 29, 63, 0.05);
   color-scheme: light;
 }
 
 /* ── BASE ──────────────────────────────────────────────── */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
@@ -83,17 +85,27 @@ html {
 body {
   background-color: var(--bg);
   color: var(--text);
-  font-family: var(--font-inter, 'Inter', system-ui, sans-serif);
+  font-family: var(--font-inter, "Inter", system-ui, sans-serif);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 /* ── SCROLLBAR ─────────────────────────────────────────── */
-::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: var(--bg-secondary); }
-::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+}
 
 /* ── DESIGN TOKENS AS UTILITIES ────────────────────────── */
 
@@ -103,12 +115,16 @@ body {
   border: 1px solid var(--border-color);
   border-radius: 18px;
   padding: 1.5rem;
-  transition: border-color 200ms ease, box-shadow 200ms ease;
+  transition:
+    border-color 200ms ease,
+    box-shadow 200ms ease;
 }
 
 .card-hover:hover {
   border-color: var(--accent-border);
-  box-shadow: 0 0 0 1px var(--accent-border), 0 8px 32px var(--glow-primary);
+  box-shadow:
+    0 0 0 1px var(--accent-border),
+    0 8px 32px var(--glow-primary);
 }
 
 .card-glass {
@@ -205,7 +221,9 @@ body {
   border-radius: 10px;
   color: var(--text);
   font-size: 0.9375rem;
-  transition: border-color 200ms ease, box-shadow 200ms ease;
+  transition:
+    border-color 200ms ease,
+    box-shadow 200ms ease;
   outline: none;
 }
 
@@ -320,26 +338,36 @@ body {
 
 /* Background radial glow */
 .bg-glow {
-  background: 
-    radial-gradient(ellipse 80% 50% at 20% 20%, var(--glow-primary) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 40% at 80% 80%, var(--glow-accent) 0%, transparent 60%),
-    var(--bg);
+  background: radial-gradient(ellipse 80% 50% at 20% 20%, var(--glow-primary) 0%, transparent 60%), radial-gradient(ellipse 60% 40% at 80% 80%, var(--glow-accent) 0%, transparent 60%), var(--bg);
 }
 
 /* Marquee animation */
 @keyframes marquee {
-  from { transform: translateX(0%); }
-  to { transform: translateX(-100%); }
+  from {
+    transform: translateX(0%);
+  }
+  to {
+    transform: translateX(-100%);
+  }
 }
 
 .animate-marquee {
   animation: marquee 50s linear infinite;
 }
+.animate-marquee-reverse {
+  animation: marquee 50s linear infinite reverse;
+}
 
 /* Fade in up */
 @keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .animate-fade-in-up {
@@ -416,17 +444,16 @@ body {
 
 /* Skeleton */
 @keyframes shimmer {
-  from { background-position: -200% 0; }
-  to { background-position: 200% 0; }
+  from {
+    background-position: -200% 0;
+  }
+  to {
+    background-position: 200% 0;
+  }
 }
 
 .skeleton {
-  background: linear-gradient(
-    90deg,
-    var(--surface) 25%,
-    var(--surface-elevated) 50%,
-    var(--surface) 75%
-  );
+  background: linear-gradient(90deg, var(--surface) 25%, var(--surface-elevated) 50%, var(--surface) 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
   border-radius: 8px;
@@ -445,7 +472,9 @@ select.input {
 
 /* Accessibility */
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
+  *,
+  *::before,
+  *::after {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
   }

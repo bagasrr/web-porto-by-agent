@@ -103,11 +103,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         {/* Top bar */}
         <header className="sticky top-0 z-20 flex items-center justify-between h-16 px-4 md:px-6 bg-[var(--bg)]/90 backdrop-blur-xl border-b border-[var(--border-color)]">
           <button
+            type="button"
             onClick={() => setMobileOpen(true)}
-            className="btn btn-sm btn-ghost md:hidden"
+            className="flex md:!hidden items-center justify-center p-2 text-[var(--text-secondary)] hover:text-[var(--text)] hover:bg-[var(--surface)] rounded-lg transition-all"
             aria-label="Open sidebar"
           >
-            <HiMenu size={20} />
+            <HiMenu size={22} />
           </button>
           <h1 className="text-sm font-semibold text-[var(--text-secondary)] hidden md:block">
             Admin Dashboard

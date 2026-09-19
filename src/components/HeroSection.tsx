@@ -109,22 +109,29 @@ export default function HeroSection({ profile }: HeroProps) {
             <div className="relative">
               {/* Glow ring */}
               <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[var(--primary)] to-[var(--accent)] opacity-30 blur-2xl scale-110" />
-              {/* Border frame */}
-              <div className="relative w-64 h-64 md:w-80 md:h-80 lg:w-96 lg:h-96 rounded-2xl overflow-hidden border border-[var(--accent-border)] shadow-2xl">
-                <Image
-                  // src="/images/profile.jpg"
-                  src="/assets/hero-section-photo.png"
-                  alt={name}
-                  fill
-                  className="object-cover object-top"
-                  priority
-                  sizes="(max-width: 768px) 256px, (max-width: 1024px) 320px, 384px"
-                />
-                {/* Overlay gradient */}
-                <div className="absolute inset-0 bg-gradient-to-t from-[var(--bg)]/40 via-transparent to-transparent" />
+
+              {/* FRAME UTAMA (Border background) */}
+              <div className="relative w-64 h-64 md:w-80 md:h-80 lg:w-96 lg:h-96 rounded-2xl border border-accent-border shadow-2xl">
+                {/* 1. LAYER DALAM: Terpotong rapi di dalam rounded border */}
+                <div className="absolute inset-0 rounded-2xl overflow-hidden">
+                  {/* Background Gradient / Overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-[var(--bg)]/60 via-transparent to-transparent z-10" />
+
+                  {/* Foto badan bawah */}
+                  <div className="absolute inset-x-0 bottom-0 h-[125%] origin-bottom">
+                    <Image src="/assets/hero-section-photo.png" alt={name} fill className="object-contain object-bottom" priority sizes="(max-width: 768px) 256px, (max-width: 1024px) 320px, 384px" />
+                  </div>
+                </div>
+
+                {/* 2. LAYER LUAR (POP-OUT): Kepala & bahu keluar border */}
+                {/* [mask-image:linear-gradient(to_bottom,black_60%,transparent_60%)] memotong separuh badan ke bawah agar tidak menabrak border bawah */}
+                <div className="absolute inset-x-0 bottom-0 h-[125%] origin-bottom pointer-events-none z-20 [mask-image:linear-gradient(to_bottom,black_65%,transparent_65%)]">
+                  <Image src="/assets/hero-section-photo.png" alt="" aria-hidden="true" fill className="object-contain object-bottom" priority sizes="(max-width: 768px) 256px, (max-width: 1024px) 320px, 384px" />
+                </div>
               </div>
+
               {/* Floating badge */}
-              <div className="absolute -bottom-4 -left-4 card px-4 py-2 bg-[var(--surface-elevated)] border border-[var(--accent-border)]">
+              <div className="absolute -bottom-4 -left-4 card px-4 py-2 bg-[var(--surface-elevated)] border border-[var(--accent-border)] z-30">
                 <span className="text-xs text-[var(--text-muted)] block">Available for</span>
                 <span className="text-sm font-semibold text-[var(--success)]">● Freelance / Full-time</span>
               </div>

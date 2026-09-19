@@ -1,35 +1,159 @@
 [
   {
+    "id": 5,
+    "title": "Chill Study (LMS)",
+    "description": "Full-featured LMS platform with Google OAuth authentication, Midtrans payment gateway integration, and role-based access control for admins and users. Enables users to enroll in paid/free courses, track learning progress, and access responsive modules across devices.",
+    "techStack": [
+      "Next.js",
+      "Node.js",
+      "PostgreSQL",
+      "Supabase",
+      "TailwindCSS",
+      "Vercel"
+    ],
+    "githubUrl": null,
+    "demoUrl": null,
+    "imageUrl": "https://i.pinimg.com/736x/30/eb/0f/30eb0f0381babb9dc04a033b1e4b53f3.jpg",
+    "order": 0,
+    "createdAt": "2026-09-05T09:53:47.770Z",
+    "updatedAt": "2026-09-19T00:15:36.665Z"
+  },
+  {
+    "id": 9,
+    "title": "Company Profile PT Pelita Rumah Langit",
+    "description": "Responsive landing page designed and developed with ReactJS to showcase the company's official digital presence. Focused on clean UI, smooth navigation, and accessibility across all devices.",
+    "techStack": [
+      "Vite",
+      "ReactJS",
+      "TailwindCSS",
+      "Vercel"
+    ],
+    "githubUrl": null,
+    "demoUrl": null,
+    "imageUrl": "https://i.pinimg.com/736x/30/eb/0f/30eb0f0381babb9dc04a033b1e4b53f3.jpg",
+    "order": 0,
+    "createdAt": "2026-09-05T09:53:47.845Z",
+    "updatedAt": "2026-09-19T00:15:08.328Z"
+  },
+  {
+    "id": 6,
+    "title": "Job Tracker",
+    "description": "Comprehensive tracking system dashboard designed to streamline the job search process, allowing users to track application statuses (Applied, Interview, Offer) and manage company details. Built with Laravel's MVC architecture to ensure secure authentication, data validation, and responsive CRUD operations.",
+    "techStack": [
+      "Laravel",
+      "MySQL",
+      "PHP",
+      "TailwindCSS"
+    ],
+    "githubUrl": null,
+    "demoUrl": null,
+    "imageUrl": "https://i.pinimg.com/736x/30/eb/0f/30eb0f0381babb9dc04a033b1e4b53f3.jpg",
+    "order": 0,
+    "createdAt": "2026-09-05T09:53:47.799Z",
+    "updatedAt": "2026-09-19T00:15:13.986Z"
+  },
+  {
+    "id": 7,
+    "title": "MoneyFlow - Personal Finance App",
+    "description": "Cross-platform mobile application designed to help users track income and expenses efficiently. Focused on translating high-fidelity Figma designs into responsive Flutter code with a modular widget structure to support database and state management logic.",
+    "techStack": [
+      "Flutter",
+      "Dart",
+      "Figma",
+      "VS Code"
+    ],
+    "githubUrl": null,
+    "demoUrl": null,
+    "imageUrl": "https://i.pinimg.com/736x/30/eb/0f/30eb0f0381babb9dc04a033b1e4b53f3.jpg",
+    "order": 0,
+    "createdAt": "2026-09-05T09:53:47.818Z",
+    "updatedAt": "2026-09-19T00:15:18.450Z"
+  },
+  {
+    "id": 8,
+    "title": "The Anvaya Juanda",
+    "description": "Visually engaging, responsive landing page for a housing promotion project. Implemented component-based architecture in ReactJS for maintainability and optimized performance and accessibility to effectively attract potential buyers.",
+    "techStack": [
+      "Vite",
+      "ReactJS",
+      "TailwindCSS",
+      "Vercel"
+    ],
+    "githubUrl": null,
+    "demoUrl": null,
+    "imageUrl": "https://i.pinimg.com/736x/30/eb/0f/30eb0f0381babb9dc04a033b1e4b53f3.jpg",
+    "order": 0,
+    "createdAt": "2026-09-05T09:53:47.832Z",
+    "updatedAt": "2026-09-19T00:15:25.194Z"
+  },
+  {
+    "id": 4,
+    "title": "Sparepart Monitoring System",
+    "description": "Web-based inventory system for spare part stock management at PT Kalbe Farma Tbk to help the Production Line 1 Department track and manage inventory efficiently. Implemented real-time monitoring, automated stock alerts, and role-based access control, reducing manual tracking errors and supporting preventive maintenance.",
+    "techStack": [
+      "Next.js",
+      "Node.js",
+      "PostgreSQL",
+      "Supabase",
+      "TailwindCSS",
+      "Vercel"
+    ],
+    "githubUrl": null,
+    "demoUrl": null,
+    "imageUrl": "https://i.pinimg.com/736x/30/eb/0f/30eb0f0381babb9dc04a033b1e4b53f3.jpg",
+    "order": 0,
+    "createdAt": "2026-09-05T09:53:47.755Z",
+    "updatedAt": "2026-09-19T00:15:31.396Z"
+  },
+  {
     "id": 1,
-    "title": "Portfolio Website",
-    "description": "A premium personal portfolio built with Next.js, Tailwind CSS, and PostgreSQL. Features dynamic content management and responsive design.",
-    "techStack": ["Next.js", "Tailwind CSS", "PostgreSQL", "Prisma"],
+    "title": "Portfolio Website GUA",
+    "description": "VIBE CODE A brutalism-themed personal portfolio built with Next.js, Tailwind CSS, and PostgreSQL. Features dynamic content management and responsive design.",
+    "techStack": [
+      "Next.js",
+      "Tailwind CSS",
+      "PostgreSQL",
+      "Prisma"
+    ],
     "githubUrl": "https://github.com/bagasrr/portfolio",
     "demoUrl": "https://bagasrr.dev",
-    "imageUrl": null,
+    "imageUrl": "https://i.pinimg.com/736x/30/eb/0f/30eb0f0381babb9dc04a033b1e4b53f3.jpg",
     "order": 1,
-    "updatedAt": "2026-09-15T00:00:00.000Z"
+    "createdAt": "2026-08-30T12:40:06.186Z",
+    "updatedAt": "2026-09-19T00:15:43.393Z"
   },
   {
     "id": 2,
     "title": "Task Management App",
     "description": "A full-stack task management application with real-time collaboration features. Supports kanban boards, team workspaces, and deadline tracking.",
-    "techStack": ["React", "Node.js", "Socket.io", "MongoDB"],
+    "techStack": [
+      "React",
+      "Node.js",
+      "Socket.io",
+      "MongoDB"
+    ],
     "githubUrl": "https://github.com/bagasrr/taskman",
     "demoUrl": "https://taskman.bagasrr.dev",
-    "imageUrl": null,
+    "imageUrl": "https://i.pinimg.com/736x/30/eb/0f/30eb0f0381babb9dc04a033b1e4b53f3.jpg",
     "order": 2,
-    "updatedAt": "2026-09-15T00:00:00.000Z"
+    "createdAt": "2026-08-30T12:40:06.186Z",
+    "updatedAt": "2026-09-19T00:15:47.960Z"
   },
   {
     "id": 3,
     "title": "E-Commerce API",
     "description": "A RESTful API for e-commerce platforms with authentication, product management, cart system, and payment integration.",
-    "techStack": ["Express", "PostgreSQL", "JWT", "Stripe"],
+    "techStack": [
+      "Express",
+      "PostgreSQL",
+      "JWT",
+      "Stripe"
+    ],
     "githubUrl": "https://github.com/bagasrr/ecommerce-api",
     "demoUrl": null,
-    "imageUrl": null,
+    "imageUrl": "https://i.pinimg.com/736x/30/eb/0f/30eb0f0381babb9dc04a033b1e4b53f3.jpg",
     "order": 3,
-    "updatedAt": "2026-09-15T00:00:00.000Z"
+    "createdAt": "2026-08-30T12:40:06.186Z",
+    "updatedAt": "2026-09-19T00:15:52.359Z"
   }
 ]

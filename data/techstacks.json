@@ -118,5 +118,109 @@
     "order": 0,
     "createdAt": "2026-09-05T09:53:47.816Z",
     "updatedAt": "2026-09-05T09:53:47.816Z"
+  },
+  {
+    "id": 17,
+    "name": "ReactJS",
+    "imageUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/reactjs/reactjs-original.svg",
+    "order": 0,
+    "createdAt": "2026-09-19T00:13:58.651Z",
+    "updatedAt": "2026-09-19T00:13:58.651Z"
+  },
+  {
+    "id": 18,
+    "name": "Tailwind CSS",
+    "imageUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tailwindcss/tailwindcss-original.svg",
+    "order": 0,
+    "createdAt": "2026-09-19T00:15:43.374Z",
+    "updatedAt": "2026-09-19T00:15:43.374Z"
+  },
+  {
+    "id": 19,
+    "name": "Prisma",
+    "imageUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/prisma/prisma-original.svg",
+    "order": 0,
+    "createdAt": "2026-09-19T00:15:43.381Z",
+    "updatedAt": "2026-09-19T00:15:43.381Z"
+  },
+  {
+    "id": 20,
+    "name": "Socket.io",
+    "imageUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/socketio/socketio-original.svg",
+    "order": 0,
+    "createdAt": "2026-09-19T00:15:47.952Z",
+    "updatedAt": "2026-09-19T00:15:47.952Z"
+  },
+  {
+    "id": 21,
+    "name": "MongoDB",
+    "imageUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mongodb/mongodb-original.svg",
+    "order": 0,
+    "createdAt": "2026-09-19T00:15:47.955Z",
+    "updatedAt": "2026-09-19T00:15:47.955Z"
+  },
+  {
+    "id": 22,
+    "name": "Express",
+    "imageUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/express/express-original.svg",
+    "order": 0,
+    "createdAt": "2026-09-19T00:15:52.344Z",
+    "updatedAt": "2026-09-19T00:15:52.344Z"
+  },
+  {
+    "id": 23,
+    "name": "JWT",
+    "imageUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/jwt/jwt-original.svg",
+    "order": 0,
+    "createdAt": "2026-09-19T00:15:52.349Z",
+    "updatedAt": "2026-09-19T00:15:52.349Z"
+  },
+  {
+    "id": 24,
+    "name": "Stripe",
+    "imageUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/stripe/stripe-original.svg",
+    "order": 0,
+    "createdAt": "2026-09-19T00:15:52.352Z",
+    "updatedAt": "2026-09-19T00:15:52.352Z"
+  },
+  {
+    "id": 25,
+    "name": "Golang",
+    "imageUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/golang/golang-original.svg",
+    "order": 0,
+    "createdAt": "2026-09-19T00:22:25.387Z",
+    "updatedAt": "2026-09-19T00:22:25.387Z"
+  },
+  {
+    "id": 26,
+    "name": "Dotnet",
+    "imageUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/dotnet/dotnet-original.svg",
+    "order": 0,
+    "createdAt": "2026-09-19T00:22:25.405Z",
+    "updatedAt": "2026-09-19T00:22:25.405Z"
+  },
+  {
+    "id": 27,
+    "name": "Airflow",
+    "imageUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/airflow/airflow-original.svg",
+    "order": 0,
+    "createdAt": "2026-09-19T00:22:25.407Z",
+    "updatedAt": "2026-09-19T00:22:25.407Z"
+  },
+  {
+    "id": 28,
+    "name": "MSSQL",
+    "imageUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mssql/mssql-original.svg",
+    "order": 0,
+    "createdAt": "2026-09-19T00:22:25.409Z",
+    "updatedAt": "2026-09-19T00:22:25.409Z"
+  },
+  {
+    "id": 29,
+    "name": "Kibana",
+    "imageUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/kibana/kibana-original.svg",
+    "order": 0,
+    "createdAt": "2026-09-19T00:22:25.410Z",
+    "updatedAt": "2026-09-19T00:22:25.410Z"
   }
 ]
