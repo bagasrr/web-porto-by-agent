@@ -29,7 +29,7 @@ export function FormInput({
         className={`input ${error ? 'input-error' : ''} ${className}`.trim()}
         {...props}
       />
-      {error && <p className="text-xs text-[var(--danger)] mt-1">{error}</p>}
+      {error && <p className="text-xs text-danger mt-1">{error}</p>}
     </div>
   )
 }

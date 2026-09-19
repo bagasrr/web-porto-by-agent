@@ -17,14 +17,14 @@ export function ExperienceCard({
   onDelete,
 }: ExperienceCardProps) {
   return (
-    <div className="card card-hover flex flex-col justify-between bg-[var(--surface-elevated)] border border-[var(--border-color)] p-5 rounded-2xl relative group">
+    <div className="card card-hover flex flex-col justify-between bg-surface-elevated border border-border p-5 rounded-2xl relative group">
       <div>
         <div className="flex items-start justify-between gap-3 mb-2">
           <div className="min-w-0 flex-1">
-            <h3 className="font-bold text-base text-[var(--text)] leading-snug truncate">
+            <h3 className="font-bold text-base text-text leading-snug truncate">
               {experience.role}
             </h3>
-            <p className="text-sm font-semibold text-[var(--accent)] mt-0.5 truncate">
+            <p className="text-sm font-semibold text-accent mt-0.5 truncate">
               {experience.company}
             </p>
           </div>
@@ -33,12 +33,12 @@ export function ExperienceCard({
           </Badge>
         </div>
 
-        <p className="text-xs text-[var(--text-secondary)] line-clamp-2 mb-2 mt-2 leading-relaxed">
+        <p className="text-xs text-text-secondary line-clamp-2 mb-2 mt-2 leading-relaxed">
           {experience.summary}
         </p>
 
         {experience.description && (
-          <p className="text-[11px] text-[var(--text-muted)] line-clamp-2 mb-3 leading-relaxed opacity-80">
+          <p className="text-[11px] text-text-muted line-clamp-2 mb-3 leading-relaxed opacity-80">
             {experience.description}
           </p>
         )}
@@ -59,8 +59,8 @@ export function ExperienceCard({
         )}
       </div>
 
-      <div className="pt-3 border-t border-[var(--border-color)] flex items-center justify-between mt-auto">
-        <span className="text-[11px] text-[var(--text-muted)]">
+      <div className="pt-3 border-t border-border flex items-center justify-between mt-auto">
+        <span className="text-[11px] text-text-muted">
           Order: #{experience.order || 0}
         </span>
         <div className="flex items-center gap-2">

@@ -11,9 +11,9 @@ export default async function AdminPage() {
   ])
 
   const STATS = [
-    { label: 'Projects', value: projects.length, icon: HiCode, color: 'text-[var(--accent)]', bg: 'bg-[var(--dark-burgundy)]' },
-    { label: 'Experience', value: `${experiences.length} roles`, icon: HiBriefcase, color: 'text-[var(--warning)]', bg: 'bg-amber-500/10' },
-    { label: 'Technologies', value: techStacks.length, icon: HiCollection, color: 'text-[var(--success)]', bg: 'bg-emerald-500/10' },
+    { label: 'Projects', value: projects.length, icon: HiCode, color: 'text-accent', bg: 'bg-dark-burgundy' },
+    { label: 'Experience', value: `${experiences.length} roles`, icon: HiBriefcase, color: 'text-warning', bg: 'bg-amber-500/10' },
+    { label: 'Technologies', value: techStacks.length, icon: HiCollection, color: 'text-success', bg: 'bg-emerald-500/10' },
     { label: 'Profile', value: profile ? 'Active' : 'Not set', icon: HiUser, color: 'text-blue-400', bg: 'bg-blue-500/10' },
   ]
 
@@ -21,10 +21,10 @@ export default async function AdminPage() {
     <div className="space-y-8 max-w-5xl">
       {/* Page header */}
       <div>
-        <h1 className="text-2xl md:text-3xl font-bold font-[family-name:var(--font-display)] text-[var(--text)] mb-1">
+        <h1 className="text-2xl md:text-3xl font-bold font-display text-text mb-1">
           Dashboard
         </h1>
-        <p className="text-[var(--text-muted)] text-sm">
+        <p className="text-text-muted text-sm">
           Manage your portfolio content from here.
         </p>
       </div>
@@ -39,10 +39,10 @@ export default async function AdminPage() {
                 <Icon size={18} className={stat.color} />
               </div>
               <div>
-                <p className="text-xl font-bold font-[family-name:var(--font-display)] text-[var(--text)]">
+                <p className="text-xl font-bold font-display text-text">
                   {stat.value}
                 </p>
-                <p className="text-xs text-[var(--text-muted)]">{stat.label}</p>
+                <p className="text-xs text-text-muted">{stat.label}</p>
               </div>
             </div>
           )

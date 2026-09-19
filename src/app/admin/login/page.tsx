@@ -41,7 +41,7 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-glow px-4">
       {/* Background decorative */}
       <div className="absolute inset-0 pointer-events-none" aria-hidden>
-        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-[var(--glow-primary)] rounded-full blur-[120px] opacity-40" />
+        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-glow-primary rounded-full blur-[120px] opacity-40" />
       </div>
 
       <div className="relative w-full max-w-md">
@@ -49,22 +49,22 @@ export default function LoginPage() {
         <div className="text-center mb-8">
           <Link
             href="/"
-            className="text-3xl font-bold font-[family-name:var(--font-display)] text-[var(--text)] hover:text-[var(--accent)] transition-colors"
+            className="text-3xl font-bold font-display text-text hover:text-accent transition-colors"
           >
-            BRR<span className="text-[var(--accent)]">.</span>
+            BRR<span className="text-accent">.</span>
           </Link>
-          <p className="text-[var(--text-muted)] text-sm mt-2">Content Management</p>
+          <p className="text-text-muted text-sm mt-2">Content Management</p>
         </div>
 
         <div className="card">
           {/* Header */}
           <div className="flex items-center gap-3 mb-6">
-            <div className="w-10 h-10 rounded-xl bg-[var(--dark-burgundy)] border border-[var(--accent-border)] flex items-center justify-center">
-              <HiLockClosed size={18} className="text-[var(--accent)]" />
+            <div className="w-10 h-10 rounded-xl bg-dark-burgundy border border-accent-border flex items-center justify-center">
+              <HiLockClosed size={18} className="text-accent" />
             </div>
             <div>
-              <h1 className="font-bold text-[var(--text)] font-[family-name:var(--font-display)]">Admin Login</h1>
-              <p className="text-xs text-[var(--text-muted)]">Sign in to manage your portfolio</p>
+              <h1 className="font-bold text-text font-display">Admin Login</h1>
+              <p className="text-xs text-text-muted">Sign in to manage your portfolio</p>
             </div>
           </div>
 
@@ -116,7 +116,7 @@ export default function LoginPage() {
         </div>
 
         <div className="text-center mt-6">
-          <Link href="/" className="text-sm text-[var(--text-muted)] hover:text-[var(--text)] transition-colors">
+          <Link href="/" className="text-sm text-text-muted hover:text-text transition-colors">
             ← Back to portfolio
           </Link>
         </div>

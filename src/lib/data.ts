@@ -35,6 +35,7 @@ export type WorkExperience = {
 export type Project = {
   id: number
   title: string
+  shortDescription?: string | null
   description: string
   techStack: string[]
   githubUrl?: string | null
@@ -68,13 +69,13 @@ export async function getProfile(): Promise<Profile | null> {
 }
 
 export async function saveProfile(data: Partial<Profile>): Promise<Profile> {
-  const { id, ...rest } = data as any
+  const { id, ...rest } = data as Record<string, any>
   delete rest.createdAt
   delete rest.updatedAt
 
   // Write to DB
   const result = await prisma.profile.upsert({
-    where: { id: id || 1 },
+    where: { id: (id as number) || 1 },
     update: rest,
     create: {
       id: 1,
@@ -193,6 +194,17 @@ export async function getProjects(): Promise<Project[]> {
   return readJsonFile<Project[]>('projects.json', [])
 }
 
+export async function getProjectById(id: number): Promise<Project | null> {
+  try {
+    const result = await prisma.project.findUnique({ where: { id } })
+    if (result) return result as unknown as Project
+  } catch {
+    // DB unavailable
+  }
+  const all = await readJsonFile<Project[]>('projects.json', [])
+  return all.find(p => p.id === id) ?? null
+}
+
 async function syncProjectsToJson() {
   try {
     const all = await prisma.project.findMany({ orderBy: { order: 'asc' } })
@@ -209,6 +221,7 @@ export async function createProject(data: Omit<Project, 'id' | 'updatedAt'>): Pr
   const result = await prisma.project.create({
     data: {
       title: data.title,
+      shortDescription: data.shortDescription || null,
       description: data.description,
       techStack: data.techStack,
       githubUrl: data.githubUrl || null,
@@ -226,6 +239,7 @@ export async function updateProject(id: number, data: Partial<Project>): Promise
     where: { id },
     data: {
       title: data.title,
+      shortDescription: data.shortDescription !== undefined ? (data.shortDescription || null) : undefined,
       description: data.description,
       techStack: data.techStack,
       githubUrl: data.githubUrl || null,

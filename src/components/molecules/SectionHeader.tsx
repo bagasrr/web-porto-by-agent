@@ -10,11 +10,11 @@ export function SectionHeader({ title, description, action }: SectionHeaderProps
   return (
     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
       <div>
-        <h2 className="text-lg font-bold font-[family-name:var(--font-display)] text-[var(--text)]">
+        <h2 className="text-lg font-bold font-display text-text">
           {title}
         </h2>
         {description && (
-          <p className="text-sm text-[var(--text-muted)] mt-0.5">{description}</p>
+          <p className="text-sm text-text-muted mt-0.5">{description}</p>
         )}
       </div>
       {action}

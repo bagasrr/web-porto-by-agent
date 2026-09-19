@@ -33,25 +33,25 @@ export function Modal({
       onClick={onClose}
     >
       <div
-        className={`card ${maxWidth} w-full max-h-[90vh] flex flex-col bg-[var(--bg-secondary)] border border-[var(--accent-border)] shadow-2xl rounded-2xl p-6`}
+        className={`card ${maxWidth} w-full max-h-[90vh] flex flex-col bg-bg-secondary border border-accent-border shadow-2xl rounded-2xl p-6`}
         onClick={(e) => e.stopPropagation()}
       >
         {(title || description) && (
-          <div className="flex items-center justify-between pb-4 border-b border-[var(--border-color)]">
+          <div className="flex items-center justify-between pb-4 border-b border-border">
             <div>
               {title && (
-                <h3 className="text-lg font-bold font-[family-name:var(--font-display)] text-[var(--text)]">
+                <h3 className="text-lg font-bold font-display text-text">
                   {title}
                 </h3>
               )}
               {description && (
-                <p className="text-xs text-[var(--text-muted)] mt-0.5">{description}</p>
+                <p className="text-xs text-text-muted mt-0.5">{description}</p>
               )}
             </div>
             <button
               type="button"
               onClick={onClose}
-              className="btn btn-sm btn-ghost p-1.5 text-[var(--text-muted)] hover:text-[var(--text)]"
+              className="btn btn-sm btn-ghost p-1.5 text-text-muted hover:text-text"
               aria-label="Close modal"
             >
               <HiX size={18} />

@@ -18,6 +18,10 @@
   --color-success: var(--success);
   --color-warning: var(--warning);
   --color-danger: var(--danger);
+  --color-glow-primary: var(--glow-primary);
+  --color-glow-accent: var(--glow-accent);
+  --font-display: var(--font-display);
+  --font-sans: var(--font-inter);
   /* Legacy compat for existing Navbar/components that use these */
   --color-card-bg: var(--surface);
   --color-background: var(--bg);

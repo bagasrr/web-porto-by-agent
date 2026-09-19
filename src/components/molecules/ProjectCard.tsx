@@ -13,11 +13,11 @@ export interface ProjectCardProps {
 
 export function ProjectCard({ project, onEdit, onDelete }: ProjectCardProps) {
   return (
-    <div className="card card-hover flex flex-col justify-between bg-[var(--surface-elevated)] border border-[var(--border-color)] p-5 rounded-2xl relative group">
+    <div className="card card-hover flex flex-col justify-between bg-surface-elevated border border-border p-5 rounded-2xl relative group">
       <div>
         {/* Thumbnail */}
         {project.imageUrl ? (
-          <div className="h-32 w-full rounded-xl mb-3 overflow-hidden bg-[var(--surface)] border border-[var(--border-color)] relative">
+          <div className="h-32 w-full rounded-xl mb-3 overflow-hidden bg-surface border border-border relative">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={project.imageUrl}
@@ -26,13 +26,13 @@ export function ProjectCard({ project, onEdit, onDelete }: ProjectCardProps) {
             />
           </div>
         ) : (
-          <div className="h-20 w-full rounded-xl mb-3 bg-gradient-to-br from-[var(--dark-burgundy)]/40 to-[var(--surface)] border border-[var(--border-color)] flex items-center justify-center text-xs text-[var(--text-muted)] font-mono">
+          <div className="h-20 w-full rounded-xl mb-3 bg-gradient-to-br from-dark-burgundy/40 to-surface border border-border flex items-center justify-center text-xs text-text-muted font-mono">
             <span>{project.title}</span>
           </div>
         )}
 
         <div className="flex items-start justify-between gap-2 mb-1">
-          <h3 className="font-bold text-base text-[var(--text)] leading-snug line-clamp-1">
+          <h3 className="font-bold text-base text-text leading-snug line-clamp-1">
             {project.title}
           </h3>
           <Badge variant="primary" size="xs" className="shrink-0">
@@ -40,8 +40,8 @@ export function ProjectCard({ project, onEdit, onDelete }: ProjectCardProps) {
           </Badge>
         </div>
 
-        <p className="text-xs text-[var(--text-secondary)] line-clamp-2 mb-3 leading-relaxed">
-          {project.description}
+        <p className="text-xs text-text-secondary line-clamp-2 mb-3 leading-relaxed">
+          {project.shortDescription || project.description}
         </p>
 
         {project.techStack && project.techStack.length > 0 && (
@@ -60,13 +60,13 @@ export function ProjectCard({ project, onEdit, onDelete }: ProjectCardProps) {
         )}
 
         {(project.githubUrl || project.demoUrl) && (
-          <div className="flex items-center gap-3 text-xs text-[var(--text-muted)] mb-3 pt-1">
+          <div className="flex items-center gap-3 text-xs text-text-muted mb-3 pt-1">
             {project.githubUrl && (
               <a
                 href={project.githubUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-[var(--accent)] flex items-center gap-1 transition-colors"
+                className="hover:text-accent flex items-center gap-1 transition-colors"
               >
                 <FaGithub size={12} />
                 <span>Code</span>
@@ -77,7 +77,7 @@ export function ProjectCard({ project, onEdit, onDelete }: ProjectCardProps) {
                 href={project.demoUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-[var(--accent)] flex items-center gap-1 transition-colors"
+                className="hover:text-accent flex items-center gap-1 transition-colors"
               >
                 <HiExternalLink size={13} />
                 <span>Live Demo</span>
@@ -87,8 +87,8 @@ export function ProjectCard({ project, onEdit, onDelete }: ProjectCardProps) {
         )}
       </div>
 
-      <div className="pt-3 border-t border-[var(--border-color)] flex items-center justify-between mt-auto">
-        <span className="text-[11px] text-[var(--text-muted)]">
+      <div className="pt-3 border-t border-border flex items-center justify-between mt-auto">
+        <span className="text-[11px] text-text-muted">
           Order: #{project.order || 0}
         </span>
         <div className="flex items-center gap-2">

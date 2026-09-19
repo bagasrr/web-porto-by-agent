@@ -1,60 +1,25 @@
 [
   {
-    "id": 5,
-    "title": "Chill Study (LMS)",
-    "description": "Full-featured LMS platform with Google OAuth authentication, Midtrans payment gateway integration, and role-based access control for admins and users. Enables users to enroll in paid/free courses, track learning progress, and access responsive modules across devices.",
+    "id": 10,
+    "title": "Kanji Paham",
+    "shortDescription": "KanjiPaham is a Japanese Kanji learning platform for Indonesian learners, featuring JLPT lessons, interactive quizzes, and progress tracking.",
+    "description": "KanjiPaham is a Japanese Kanji learning platform built for Indonesian learners. The application provides structured Kanji lessons based on JLPT levels, covering meanings, readings, stroke orders, and vocabulary examples.\n\nTo make learning more engaging, KanjiPaham includes interactive quiz modes such as multiple choice and flashcard-based exercises, allowing users to actively practice and reinforce their knowledge. The platform also incorporates learning progress, daily goals, and gamification elements to encourage consistent study habits.\n\nThe interface was designed around a warm Japanese-inspired visual identity while maintaining a clean, accessible, and responsive experience across desktop and mobile devices.",
     "techStack": [
-      "Next.js",
-      "Node.js",
-      "PostgreSQL",
-      "Supabase",
-      "TailwindCSS",
-      "Vercel"
+      "NextJs",
+      "Tailwind",
+      "Prisma"
     ],
     "githubUrl": null,
     "demoUrl": null,
-    "imageUrl": "https://i.pinimg.com/736x/30/eb/0f/30eb0f0381babb9dc04a033b1e4b53f3.jpg",
-    "order": 0,
-    "createdAt": "2026-09-05T09:53:47.770Z",
-    "updatedAt": "2026-09-19T00:15:36.665Z"
-  },
-  {
-    "id": 9,
-    "title": "Company Profile PT Pelita Rumah Langit",
-    "description": "Responsive landing page designed and developed with ReactJS to showcase the company's official digital presence. Focused on clean UI, smooth navigation, and accessibility across all devices.",
-    "techStack": [
-      "Vite",
-      "ReactJS",
-      "TailwindCSS",
-      "Vercel"
-    ],
-    "githubUrl": null,
-    "demoUrl": null,
-    "imageUrl": "https://i.pinimg.com/736x/30/eb/0f/30eb0f0381babb9dc04a033b1e4b53f3.jpg",
-    "order": 0,
-    "createdAt": "2026-09-05T09:53:47.845Z",
-    "updatedAt": "2026-09-19T00:15:08.328Z"
-  },
-  {
-    "id": 6,
-    "title": "Job Tracker",
-    "description": "Comprehensive tracking system dashboard designed to streamline the job search process, allowing users to track application statuses (Applied, Interview, Offer) and manage company details. Built with Laravel's MVC architecture to ensure secure authentication, data validation, and responsive CRUD operations.",
-    "techStack": [
-      "Laravel",
-      "MySQL",
-      "PHP",
-      "TailwindCSS"
-    ],
-    "githubUrl": null,
-    "demoUrl": null,
-    "imageUrl": "https://i.pinimg.com/736x/30/eb/0f/30eb0f0381babb9dc04a033b1e4b53f3.jpg",
-    "order": 0,
-    "createdAt": "2026-09-05T09:53:47.799Z",
-    "updatedAt": "2026-09-19T00:15:13.986Z"
+    "imageUrl": "/images/KanjiPahamLogo.png",
+    "order": 1,
+    "createdAt": "2026-09-19T01:19:26.178Z",
+    "updatedAt": "2026-09-19T01:41:11.248Z"
   },
   {
     "id": 7,
     "title": "MoneyFlow - Personal Finance App",
+    "shortDescription": "Cross-platform mobile application designed to help users track income and expenses efficiently.",
     "description": "Cross-platform mobile application designed to help users track income and expenses efficiently. Focused on translating high-fidelity Figma designs into responsive Flutter code with a modular widget structure to support database and state management logic.",
     "techStack": [
       "Flutter",
@@ -65,30 +30,14 @@
     "githubUrl": null,
     "demoUrl": null,
     "imageUrl": "https://i.pinimg.com/736x/30/eb/0f/30eb0f0381babb9dc04a033b1e4b53f3.jpg",
-    "order": 0,
+    "order": 2,
     "createdAt": "2026-09-05T09:53:47.818Z",
-    "updatedAt": "2026-09-19T00:15:18.450Z"
-  },
-  {
-    "id": 8,
-    "title": "The Anvaya Juanda",
-    "description": "Visually engaging, responsive landing page for a housing promotion project. Implemented component-based architecture in ReactJS for maintainability and optimized performance and accessibility to effectively attract potential buyers.",
-    "techStack": [
-      "Vite",
-      "ReactJS",
-      "TailwindCSS",
-      "Vercel"
-    ],
-    "githubUrl": null,
-    "demoUrl": null,
-    "imageUrl": "https://i.pinimg.com/736x/30/eb/0f/30eb0f0381babb9dc04a033b1e4b53f3.jpg",
-    "order": 0,
-    "createdAt": "2026-09-05T09:53:47.832Z",
-    "updatedAt": "2026-09-19T00:15:25.194Z"
+    "updatedAt": "2026-09-19T01:41:35.841Z"
   },
   {
     "id": 4,
     "title": "Sparepart Monitoring System",
+    "shortDescription": "Web-based inventory system for real-time spare part stock management and preventive maintenance.",
     "description": "Web-based inventory system for spare part stock management at PT Kalbe Farma Tbk to help the Production Line 1 Department track and manage inventory efficiently. Implemented real-time monitoring, automated stock alerts, and role-based access control, reducing manual tracking errors and supporting preventive maintenance.",
     "techStack": [
       "Next.js",
@@ -101,59 +50,28 @@
     "githubUrl": null,
     "demoUrl": null,
     "imageUrl": "https://i.pinimg.com/736x/30/eb/0f/30eb0f0381babb9dc04a033b1e4b53f3.jpg",
-    "order": 0,
+    "order": 3,
     "createdAt": "2026-09-05T09:53:47.755Z",
-    "updatedAt": "2026-09-19T00:15:31.396Z"
+    "updatedAt": "2026-09-19T01:41:48.368Z"
   },
   {
-    "id": 1,
-    "title": "Portfolio Website GUA",
-    "description": "VIBE CODE A brutalism-themed personal portfolio built with Next.js, Tailwind CSS, and PostgreSQL. Features dynamic content management and responsive design.",
+    "id": 5,
+    "title": "Chill Study (LMS)",
+    "shortDescription": "Full-featured LMS platform with Google OAuth, Midtrans payments, and course progress tracking.",
+    "description": "Full-featured LMS platform with Google OAuth authentication, Midtrans payment gateway integration, and role-based access control for admins and users. Enables users to enroll in paid/free courses, track learning progress, and access responsive modules across devices.",
     "techStack": [
       "Next.js",
-      "Tailwind CSS",
-      "PostgreSQL",
-      "Prisma"
-    ],
-    "githubUrl": "https://github.com/bagasrr/portfolio",
-    "demoUrl": "https://bagasrr.dev",
-    "imageUrl": "https://i.pinimg.com/736x/30/eb/0f/30eb0f0381babb9dc04a033b1e4b53f3.jpg",
-    "order": 1,
-    "createdAt": "2026-08-30T12:40:06.186Z",
-    "updatedAt": "2026-09-19T00:15:43.393Z"
-  },
-  {
-    "id": 2,
-    "title": "Task Management App",
-    "description": "A full-stack task management application with real-time collaboration features. Supports kanban boards, team workspaces, and deadline tracking.",
-    "techStack": [
-      "React",
       "Node.js",
-      "Socket.io",
-      "MongoDB"
-    ],
-    "githubUrl": "https://github.com/bagasrr/taskman",
-    "demoUrl": "https://taskman.bagasrr.dev",
-    "imageUrl": "https://i.pinimg.com/736x/30/eb/0f/30eb0f0381babb9dc04a033b1e4b53f3.jpg",
-    "order": 2,
-    "createdAt": "2026-08-30T12:40:06.186Z",
-    "updatedAt": "2026-09-19T00:15:47.960Z"
-  },
-  {
-    "id": 3,
-    "title": "E-Commerce API",
-    "description": "A RESTful API for e-commerce platforms with authentication, product management, cart system, and payment integration.",
-    "techStack": [
-      "Express",
       "PostgreSQL",
-      "JWT",
-      "Stripe"
+      "Supabase",
+      "TailwindCSS",
+      "Vercel"
     ],
-    "githubUrl": "https://github.com/bagasrr/ecommerce-api",
+    "githubUrl": null,
     "demoUrl": null,
     "imageUrl": "https://i.pinimg.com/736x/30/eb/0f/30eb0f0381babb9dc04a033b1e4b53f3.jpg",
-    "order": 3,
-    "createdAt": "2026-08-30T12:40:06.186Z",
-    "updatedAt": "2026-09-19T00:15:52.359Z"
+    "order": 4,
+    "createdAt": "2026-09-05T09:53:47.770Z",
+    "updatedAt": "2026-09-19T01:41:54.370Z"
   }
 ]

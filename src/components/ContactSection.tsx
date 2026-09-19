@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { FaLinkedin, FaGithub, FaWhatsapp } from 'react-icons/fa'
+import { FaLinkedin, FaWhatsapp } from 'react-icons/fa'
 import { MdEmail } from 'react-icons/md'
 import { HiArrowRight } from 'react-icons/hi'
 import type { Profile } from '@/lib/data'
@@ -35,11 +35,11 @@ export default function ContactSection({ profile }: ContactSectionProps) {
           {/* Left: CTA info */}
           <div>
             <p className="eyebrow mb-4">Get In Touch</p>
-            <h2 className="text-3xl md:text-5xl font-bold font-[family-name:var(--font-display)] text-[var(--text)] leading-tight mb-6">
+            <h2 className="text-3xl md:text-5xl font-bold font-display text-text leading-tight mb-6">
               Have a project{' '}
               <span className="text-gradient">in mind?</span>
             </h2>
-            <p className="text-[var(--text-secondary)] text-lg leading-relaxed mb-8">
+            <p className="text-text-secondary text-lg leading-relaxed mb-8">
               Let&apos;s build something meaningful together. Whether it&apos;s a new product,
               improving an existing system, or just a conversation — I&apos;m happy to connect.
             </p>
@@ -51,10 +51,10 @@ export default function ContactSection({ profile }: ContactSectionProps) {
                   href={`mailto:${profile.email}`}
                   className="flex items-center gap-3 group"
                 >
-                  <div className="w-10 h-10 rounded-xl bg-[var(--surface)] border border-[var(--border-color)] flex items-center justify-center group-hover:border-[var(--accent-border)] group-hover:text-[var(--accent)] transition-all">
+                  <div className="w-10 h-10 rounded-xl bg-surface border border-border flex items-center justify-center group-hover:border-accent-border group-hover:text-accent transition-all">
                     <MdEmail size={17} />
                   </div>
-                  <span className="text-[var(--text-secondary)] group-hover:text-[var(--text)] transition-colors text-sm">
+                  <span className="text-text-secondary group-hover:text-text transition-colors text-sm">
                     {profile.email}
                   </span>
                 </a>
@@ -66,10 +66,10 @@ export default function ContactSection({ profile }: ContactSectionProps) {
                   rel="noopener noreferrer"
                   className="flex items-center gap-3 group"
                 >
-                  <div className="w-10 h-10 rounded-xl bg-[var(--surface)] border border-[var(--border-color)] flex items-center justify-center group-hover:border-[var(--accent-border)] group-hover:text-[var(--accent)] transition-all">
+                  <div className="w-10 h-10 rounded-xl bg-surface border border-border flex items-center justify-center group-hover:border-accent-border group-hover:text-accent transition-all">
                     <FaLinkedin size={16} />
                   </div>
-                  <span className="text-[var(--text-secondary)] group-hover:text-[var(--text)] transition-colors text-sm">
+                  <span className="text-text-secondary group-hover:text-text transition-colors text-sm">
                     LinkedIn
                   </span>
                 </a>
@@ -81,10 +81,10 @@ export default function ContactSection({ profile }: ContactSectionProps) {
                   rel="noopener noreferrer"
                   className="flex items-center gap-3 group"
                 >
-                  <div className="w-10 h-10 rounded-xl bg-[var(--surface)] border border-[var(--border-color)] flex items-center justify-center group-hover:border-[var(--accent-border)] group-hover:text-[var(--accent)] transition-all">
+                  <div className="w-10 h-10 rounded-xl bg-surface border border-border flex items-center justify-center group-hover:border-accent-border group-hover:text-accent transition-all">
                     <FaWhatsapp size={16} />
                   </div>
-                  <span className="text-[var(--text-secondary)] group-hover:text-[var(--text)] transition-colors text-sm">
+                  <span className="text-text-secondary group-hover:text-text transition-colors text-sm">
                     WhatsApp
                   </span>
                 </a>
@@ -94,7 +94,7 @@ export default function ContactSection({ profile }: ContactSectionProps) {
 
           {/* Right: Contact form */}
           <div className="card">
-            <h3 className="text-lg font-bold font-[family-name:var(--font-display)] text-[var(--text)] mb-6">
+            <h3 className="text-lg font-bold font-display text-text mb-6">
               Send a Message
             </h3>
 

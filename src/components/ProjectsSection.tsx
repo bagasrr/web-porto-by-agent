@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { HiArrowRight, HiExternalLink } from 'react-icons/hi'
+import { HiExternalLink, HiArrowRight } from 'react-icons/hi'
 import { FaGithub } from 'react-icons/fa'
 import type { Project } from '@/lib/data'
 
@@ -19,10 +19,10 @@ export default function ProjectsSection({ projects }: ProjectsSectionProps) {
       <section id="projects" className="section">
         <div className="max-w-6xl mx-auto px-4 text-center py-20">
           <p className="eyebrow mb-4">Portfolio</p>
-          <h2 className="text-4xl font-bold font-[family-name:var(--font-display)] text-[var(--text)] mb-4">
+          <h2 className="text-4xl font-bold font-display text-text mb-4">
             Featured Projects
           </h2>
-          <p className="text-[var(--text-muted)]">No projects yet. Check back soon.</p>
+          <p className="text-text-muted">No projects yet. Check back soon.</p>
         </div>
       </section>
     )
@@ -35,12 +35,12 @@ export default function ProjectsSection({ projects }: ProjectsSectionProps) {
         <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-12 gap-4">
           <div>
             <p className="eyebrow mb-3">Portfolio</p>
-            <h2 className="text-3xl md:text-5xl font-bold font-[family-name:var(--font-display)] text-[var(--text)] leading-tight">
+            <h2 className="text-3xl md:text-5xl font-bold font-display text-text leading-tight">
               Featured{' '}
               <span className="text-gradient">Projects</span>
             </h2>
           </div>
-          <p className="text-[var(--text-muted)] max-w-sm md:text-right">
+          <p className="text-text-muted max-w-sm md:text-right">
             A selection of work I&apos;m proud of. Each project represents a unique challenge.
           </p>
         </div>
@@ -53,22 +53,32 @@ export default function ProjectsSection({ projects }: ProjectsSectionProps) {
               className="card card-hover group flex flex-col relative overflow-hidden"
             >
               {/* Project image or gradient placeholder */}
-              <div className={`h-44 rounded-xl mb-5 overflow-hidden bg-gradient-to-br ${FALLBACK_COLORS[i % FALLBACK_COLORS.length]} relative`}>
-                {project.imageUrl ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={project.imageUrl}
-                    alt={project.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                ) : (
-                  <div className="absolute inset-0 flex items-end p-4">
-                    <span className="text-5xl font-bold font-[family-name:var(--font-display)] text-white/10 select-none">
-                      {String(i + 1).padStart(2, '0')}
-                    </span>
-                  </div>
-                )}
-              </div>
+              <Link
+                href={`/project/${project.id}`}
+                className="block overflow-hidden rounded-xl mb-5"
+                aria-label={`View details of ${project.title}`}
+              >
+                <div
+                  className={`h-44 overflow-hidden bg-gradient-to-br ${
+                    FALLBACK_COLORS[i % FALLBACK_COLORS.length]
+                  } relative`}
+                >
+                  {project.imageUrl ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={project.imageUrl}
+                      alt={project.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                  ) : (
+                    <div className="absolute inset-0 flex items-end p-4">
+                      <span className="text-5xl font-bold font-display text-white/10 select-none">
+                        {String(i + 1).padStart(2, '0')}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              </Link>
 
               {/* Number */}
               <span className="eyebrow mb-2">
@@ -76,13 +86,18 @@ export default function ProjectsSection({ projects }: ProjectsSectionProps) {
               </span>
 
               {/* Title */}
-              <h3 className="text-lg font-bold font-[family-name:var(--font-display)] text-[var(--text)] mb-2 group-hover:text-[var(--accent)] transition-colors line-clamp-1">
-                {project.title}
+              <h3 className="text-lg font-bold font-display text-text mb-2 transition-colors line-clamp-1">
+                <Link
+                  href={`/project/${project.id}`}
+                  className="hover:text-accent transition-colors"
+                >
+                  {project.title}
+                </Link>
               </h3>
 
-              {/* Description */}
-              <p className="text-[var(--text-secondary)] text-sm leading-relaxed mb-4 line-clamp-2 flex-1">
-                {project.description}
+              {/* Short Description */}
+              <p className="text-text-secondary text-sm leading-relaxed mb-4 flex-1">
+                {project.shortDescription || project.description}
               </p>
 
               {/* Tech tags */}
@@ -100,16 +115,23 @@ export default function ProjectsSection({ projects }: ProjectsSectionProps) {
               </div>
 
               {/* Links */}
-              <div className="flex gap-2 mt-auto">
+              <div className="flex items-center gap-2 mt-auto pt-3 border-t border-border">
+                <Link
+                  href={`/project/${project.id}`}
+                  className="btn btn-sm btn-ghost text-xs flex-1 text-text-muted hover:text-text justify-center"
+                >
+                  Details <HiArrowRight size={13} />
+                </Link>
                 {project.githubUrl && (
                   <a
                     href={project.githubUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="btn btn-sm btn-secondary flex-1"
+                    className="btn btn-sm btn-secondary text-xs px-3"
                     aria-label={`${project.title} GitHub`}
+                    title="GitHub"
                   >
-                    <FaGithub size={14} /> GitHub
+                    <FaGithub size={13} />
                   </a>
                 )}
                 {project.demoUrl && (
@@ -117,15 +139,12 @@ export default function ProjectsSection({ projects }: ProjectsSectionProps) {
                     href={project.demoUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="btn btn-sm btn-primary flex-1 group/btn"
+                    className="btn btn-sm btn-primary text-xs px-3"
                     aria-label={`${project.title} live demo`}
+                    title="Live Demo"
                   >
-                    Live Demo
-                    <HiExternalLink size={14} className="group-hover/btn:translate-x-0.5 transition-transform" />
+                    <HiExternalLink size={14} />
                   </a>
-                )}
-                {!project.githubUrl && !project.demoUrl && (
-                  <span className="text-xs text-[var(--text-muted)] italic">No links available</span>
                 )}
               </div>
             </article>

@@ -155,7 +155,7 @@ export function ExperienceModal({
         </div>
 
         {/* Modal Footer */}
-        <div className="flex items-center justify-end gap-3 pt-4 border-t border-[var(--border-color)]">
+        <div className="flex items-center justify-end gap-3 pt-4 border-t border-border">
           <Button type="button" variant="secondary" onClick={onClose}>
             Cancel
           </Button>

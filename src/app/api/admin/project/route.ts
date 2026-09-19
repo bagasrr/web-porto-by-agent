@@ -15,6 +15,7 @@ export async function POST(request: Request) {
     await syncTechStackNames(techStack)
     const project = await createProject({
       title: data.title,
+      shortDescription: data.shortDescription || null,
       description: data.description,
       techStack,
       githubUrl: data.githubUrl || null,
@@ -36,6 +37,7 @@ export async function PUT(request: Request) {
     await syncTechStackNames(techStack)
     const project = await updateProject(parseInt(data.id), {
       title: data.title,
+      shortDescription: data.shortDescription !== undefined ? (data.shortDescription || null) : undefined,
       description: data.description,
       techStack,
       githubUrl: data.githubUrl || null,

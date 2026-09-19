@@ -24,16 +24,16 @@ export function DeleteConfirmModal({
       onClick={onCancel}
     >
       <div
-        className="card max-w-sm w-full bg-[var(--bg-secondary)] border border-[var(--border-color)] shadow-2xl"
+        className="card max-w-sm w-full bg-bg-secondary border border-border shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center gap-3 mb-4">
-          <div className="w-10 h-10 rounded-xl bg-[var(--danger)]/10 border border-[var(--danger)]/30 flex items-center justify-center shrink-0">
-            <HiTrash size={18} className="text-[var(--danger)]" />
+          <div className="w-10 h-10 rounded-xl bg-danger/10 border border-danger/30 flex items-center justify-center shrink-0">
+            <HiTrash size={18} className="text-danger" />
           </div>
           <div>
-            <h3 className="font-bold text-[var(--text)]">Delete {label}?</h3>
-            <p className="text-xs text-[var(--text-muted)]">This action cannot be undone.</p>
+            <h3 className="font-bold text-text">Delete {label}?</h3>
+            <p className="text-xs text-text-muted">This action cannot be undone.</p>
           </div>
         </div>
         <div className="flex gap-3">

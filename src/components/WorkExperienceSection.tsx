@@ -19,18 +19,18 @@ export default function WorkExperienceSection({ experiences }: ExperienceSection
         {/* Header */}
         <div className="mb-12">
           <p className="eyebrow mb-3">Career</p>
-          <h2 className="text-3xl md:text-5xl font-bold font-[family-name:var(--font-display)] text-[var(--text)] leading-tight">
+          <h2 className="text-3xl md:text-5xl font-bold font-display text-text leading-tight">
             Work{' '}
             <span className="text-gradient">Experience</span>
           </h2>
         </div>
 
         {experiences.length === 0 ? (
-          <p className="text-[var(--text-muted)]">No experiences listed yet.</p>
+          <p className="text-text-muted">No experiences listed yet.</p>
         ) : (
           <div className="relative">
             {/* Timeline line */}
-            <div className="absolute left-0 md:left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-[var(--accent)] via-[var(--border-color)] to-transparent ml-4 md:ml-0 -translate-x-1/2" />
+            <div className="absolute left-0 md:left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-accent via-border to-transparent ml-4 md:ml-0 -translate-x-1/2" />
 
             <div className="space-y-8">
               {experiences.map((exp, i) => (
@@ -41,12 +41,12 @@ export default function WorkExperienceSection({ experiences }: ExperienceSection
                   }`}
                 >
                   {/* Timeline node */}
-                  <div className="absolute left-4 md:left-1/2 top-8 w-3 h-3 rounded-full bg-[var(--accent)] border-2 border-[var(--bg)] shadow-lg shadow-[var(--glow-accent)] -translate-x-1/2 z-10" />
+                  <div className="absolute left-4 md:left-1/2 top-8 w-3 h-3 rounded-full bg-accent border-2 border-bg shadow-lg shadow-glow-accent -translate-x-1/2 z-10" />
 
                   {/* Date (desktop only, on opposite side) */}
                   <div className={`hidden md:flex md:w-1/2 items-start ${i % 2 === 0 ? 'justify-end pr-10 pt-7' : 'justify-start pl-10 pt-7'}`}>
                     <div className="text-right">
-                      <span className="text-sm font-semibold text-[var(--accent)]">
+                      <span className="text-sm font-semibold text-accent">
                         {formatDate(exp.startDate)} — {exp.endDate ? formatDate(exp.endDate) : 'Present'}
                       </span>
                     </div>
@@ -63,13 +63,13 @@ export default function WorkExperienceSection({ experiences }: ExperienceSection
                           </span>
                         </div>
 
-                        <h3 className="text-lg font-bold font-[family-name:var(--font-display)] text-[var(--text)] group-hover:text-[var(--accent)] transition-colors mb-1">
+                        <h3 className="text-lg font-bold font-display text-text group-hover:text-accent transition-colors mb-1">
                           {exp.role}
                         </h3>
-                        <p className="text-[var(--accent)] font-semibold text-sm mb-3">
+                        <p className="text-accent font-semibold text-sm mb-3">
                           {exp.company}
                         </p>
-                        <p className="text-[var(--text-secondary)] text-sm leading-relaxed mb-4 line-clamp-2">
+                        <p className="text-text-secondary text-sm leading-relaxed mb-4 line-clamp-2">
                           {exp.summary}
                         </p>
                         <div className="flex flex-wrap gap-1.5">

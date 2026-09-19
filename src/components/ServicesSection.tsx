@@ -42,7 +42,7 @@ export default function ServicesSection() {
         {/* Header */}
         <div className="mb-12">
           <p className="eyebrow mb-3">What I Do</p>
-          <h2 className="text-3xl md:text-5xl font-bold font-[family-name:var(--font-display)] text-[var(--text)] leading-tight">
+          <h2 className="text-3xl md:text-5xl font-bold font-display text-text leading-tight">
             Services I{' '}
             <span className="text-gradient">Offer</span>
           </h2>
@@ -57,20 +57,20 @@ export default function ServicesSection() {
                 className="card card-hover group relative overflow-hidden"
               >
                 {/* Number watermark */}
-                <span className="absolute top-4 right-6 text-6xl font-bold font-[family-name:var(--font-display)] text-[var(--text)]/5 select-none group-hover:text-[var(--primary)]/10 transition-colors">
+                <span className="absolute top-4 right-6 text-6xl font-bold font-display text-text/5 select-none group-hover:text-primary/10 transition-colors">
                   {service.num}
                 </span>
 
                 {/* Icon */}
-                <div className="w-10 h-10 rounded-xl bg-[var(--dark-burgundy)] border border-[var(--accent-border)] flex items-center justify-center mb-4 group-hover:bg-[var(--primary)] transition-colors">
-                  <Icon size={20} className="text-[var(--accent)] group-hover:text-white transition-colors" />
+                <div className="w-10 h-10 rounded-xl bg-dark-burgundy border border-accent-border flex items-center justify-center mb-4 group-hover:bg-primary transition-colors">
+                  <Icon size={20} className="text-accent group-hover:text-white transition-colors" />
                 </div>
 
                 {/* Content */}
-                <h3 className="text-lg font-bold font-[family-name:var(--font-display)] text-[var(--text)] mb-3">
+                <h3 className="text-lg font-bold font-display text-text mb-3">
                   {service.title}
                 </h3>
-                <p className="text-[var(--text-secondary)] text-sm leading-relaxed mb-5">
+                <p className="text-text-secondary text-sm leading-relaxed mb-5">
                   {service.description}
                 </p>
 

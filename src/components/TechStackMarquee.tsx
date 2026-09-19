@@ -68,10 +68,10 @@ export default function SkillsSection({ techStacks }: SkillsSectionProps) {
       {/* <div className="max-w-6xl mx-auto px-4 mt-10">
         <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-4">
           {techStacks.map((tech) => (
-            <div key={tech.id} className="card flex flex-col items-center gap-2 py-4 px-2 hover:border-[var(--accent-border)] transition-colors group">
+            <div key={tech.id} className="card flex flex-col items-center gap-2 py-4 px-2 hover:border-accent-border transition-colors group">
               {/* eslint-disable-next-line @next/next/no-img-element */}
       {/* <img src={tech.imageUrl} alt={tech.name} className="w-8 h-8 object-contain grayscale group-hover:grayscale-0 transition-all duration-300" />
-              <span className="text-xs text-[var(--text-muted)] text-center group-hover:text-[var(--text-secondary)] transition-colors truncate w-full text-center">{tech.name}</span>
+              <span className="text-xs text-text-muted text-center group-hover:text-text-secondary transition-colors truncate w-full text-center">{tech.name}</span>
             </div>
           ))}
         </div>

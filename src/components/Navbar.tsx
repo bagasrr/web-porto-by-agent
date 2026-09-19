@@ -1,115 +1,99 @@
-'use client'
+"use client";
 
-import { useState, useEffect } from 'react'
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import { FaLinkedin } from 'react-icons/fa'
-import { MdEmail } from 'react-icons/md'
-import { HiMenu, HiX } from 'react-icons/hi'
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { FaLinkedin } from "react-icons/fa";
+import { MdEmail } from "react-icons/md";
+import { HiMenu, HiX } from "react-icons/hi";
 
 const NAV_LINKS = [
-  { label: 'Home', href: '/' },
-  { label: 'Work', href: '#projects' },
-  { label: 'Experience', href: '#experience' },
-  { label: 'Skills', href: '#skills' },
-  { label: 'Contact', href: '#contact' },
-]
+  { label: "Home", href: "/" },
+  { label: "Work", href: "#projects" },
+  { label: "Experience", href: "#experience" },
+  { label: "Skills", href: "#skills" },
+  { label: "Contact", href: "#contact" },
+];
 
 type NavbarProps = {
   profile?: {
-    fullName?: string
-    email?: string
-    linkedin?: string
-    whatsapp?: string
-  } | null
-}
+    fullName?: string;
+    email?: string;
+    linkedin?: string;
+    whatsapp?: string;
+  } | null;
+};
 
 export default function Navbar({ profile }: NavbarProps) {
-  const pathname = usePathname()
-  const [scrolled, setScrolled] = useState(false)
-  const [mobileOpen, setMobileOpen] = useState(false)
+  const pathname = usePathname();
+  const [scrolled, setScrolled] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
-    const handler = () => setScrolled(window.scrollY > 20)
-    window.addEventListener('scroll', handler, { passive: true })
-    return () => window.removeEventListener('scroll', handler)
-  }, [])
+    const handler = () => setScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", handler, { passive: true });
+    return () => window.removeEventListener("scroll", handler);
+  }, []);
 
   // Do not render the public portfolio navbar on /admin routes
-  if (pathname?.startsWith('/admin')) {
-    return null
+  if (pathname?.startsWith("/admin")) {
+    return null;
   }
 
   const handleNavClick = (href: string) => {
-    setMobileOpen(false)
-    if (href.startsWith('#')) {
-      const el = document.getElementById(href.slice(1))
-      el?.scrollIntoView({ behavior: 'smooth' })
+    setMobileOpen(false);
+    if (href.startsWith("#")) {
+      const el = document.getElementById(href.slice(1));
+      el?.scrollIntoView({ behavior: "smooth" });
     }
-  }
+  };
 
   return (
     <>
-      <header
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          scrolled
-            ? 'bg-[var(--bg)]/90 backdrop-blur-xl border-b border-[var(--border-color)] shadow-lg shadow-black/20'
-            : 'bg-transparent'
-        }`}
-      >
+      <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? "bg-bg/90 backdrop-blur-xl border-b border-border shadow-lg shadow-black/20" : "bg-transparent"}`}>
         <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
           {/* Logo */}
-          <Link
-            href="/"
-            className="text-xl font-bold font-[family-name:var(--font-display)] tracking-tight text-[var(--text)] hover:text-[var(--accent)] transition-colors"
-          >
-            BRR<span className="text-[var(--accent)]">.</span>
+          <Link href="/" className="text-xl font-bold font-display tracking-tight text-text hover:text-accent transition-colors">
+            BRR<span className="text-accent">.</span>
           </Link>
 
           {/* Desktop nav */}
           <nav className="hidden md:flex items-center gap-1">
-            {NAV_LINKS.map((link) => (
-              <button
-                key={link.label}
-                type="button"
-                onClick={() => handleNavClick(link.href)}
-                className="px-4 py-2 text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--text)] hover:bg-[var(--surface)] rounded-lg transition-all duration-150 cursor-pointer"
-              >
-                {link.label}
-              </button>
-            ))}
+            {NAV_LINKS.map((link) => {
+              if (link.href.startsWith("#")) {
+                return (
+                  <button
+                    key={link.label}
+                    type="button"
+                    onClick={() => handleNavClick(link.href)}
+                    className="px-4 py-2 text-sm font-medium text-text-secondary hover:text-text hover:bg-surface rounded-lg transition-all duration-150 cursor-pointer"
+                  >
+                    {link.label}
+                  </button>
+                );
+              } else {
+                return (
+                  <Link key={link.label} href={link.href} className="px-4 py-2 text-sm font-medium text-text-secondary hover:text-text hover:bg-surface rounded-lg transition-all duration-150">
+                    {link.label}
+                  </Link>
+                );
+              }
+            })}
           </nav>
 
           {/* Desktop CTAs */}
           <div className="hidden md:flex items-center gap-2">
             {profile?.email && (
-              <a
-                href={`mailto:${profile.email}`}
-                className="btn btn-sm btn-ghost"
-                title="Email"
-                aria-label="Send email"
-              >
+              <a href={`mailto:${profile.email}`} className="btn btn-sm btn-ghost" title="Email" aria-label="Send email">
                 <MdEmail size={16} />
               </a>
             )}
             {profile?.linkedin && (
-              <a
-                href={profile.linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn btn-sm btn-ghost"
-                title="LinkedIn"
-                aria-label="LinkedIn profile"
-              >
+              <a href={profile.linkedin} target="_blank" rel="noopener noreferrer" className="btn btn-sm btn-ghost" title="LinkedIn" aria-label="LinkedIn profile">
                 <FaLinkedin size={15} />
               </a>
             )}
-            <a
-              href="/cv.pdf"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn btn-sm btn-primary"
-            >
+            <a href="/cv.pdf" target="_blank" rel="noopener noreferrer" className="btn btn-sm btn-primary">
               Resume
             </a>
           </div>
@@ -118,8 +102,8 @@ export default function Navbar({ profile }: NavbarProps) {
           <button
             type="button"
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="flex md:!hidden items-center justify-center p-2 text-[var(--text-secondary)] hover:text-[var(--text)] hover:bg-[var(--surface)] rounded-lg transition-all"
-            aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
+            className="flex md:hidden! items-center justify-center p-2 text-text-secondary hover:text-text hover:bg-surface rounded-lg transition-all"
+            aria-label={mobileOpen ? "Close menu" : "Open menu"}
           >
             {mobileOpen ? <HiX size={22} /> : <HiMenu size={22} />}
           </button>
@@ -128,26 +112,20 @@ export default function Navbar({ profile }: NavbarProps) {
 
       {/* Mobile drawer */}
       {mobileOpen && (
-        <div
-          className="fixed inset-0 z-40 md:!hidden"
-          onClick={() => setMobileOpen(false)}
-        >
+        <div className="fixed inset-0 z-40 md:!hidden" onClick={() => setMobileOpen(false)}>
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
-          <nav
-            className="absolute top-16 left-0 right-0 bg-[var(--bg-secondary)] border-b border-[var(--border-color)] p-4 space-y-1"
-            onClick={(e) => e.stopPropagation()}
-          >
+          <nav className="absolute top-16 left-0 right-0 bg-bg-secondary border-b border-border p-4 space-y-1" onClick={(e) => e.stopPropagation()}>
             {NAV_LINKS.map((link) => (
               <button
                 key={link.label}
                 type="button"
                 onClick={() => handleNavClick(link.href)}
-                className="w-full text-left px-4 py-3 text-base font-medium text-[var(--text-secondary)] hover:text-[var(--text)] hover:bg-[var(--surface)] rounded-lg transition-all cursor-pointer"
+                className="w-full text-left px-4 py-3 text-base font-medium text-text-secondary hover:text-text hover:bg-surface rounded-lg transition-all cursor-pointer"
               >
                 {link.label}
               </button>
             ))}
-            <div className="pt-3 border-t border-[var(--border-color)] flex gap-2">
+            <div className="pt-3 border-t border-border flex gap-2">
               {profile?.email && (
                 <a href={`mailto:${profile.email}`} className="btn btn-sm btn-ghost flex-1">
                   <MdEmail size={16} /> Email
@@ -166,5 +144,5 @@ export default function Navbar({ profile }: NavbarProps) {
         </div>
       )}
     </>
-  )
+  );
 }

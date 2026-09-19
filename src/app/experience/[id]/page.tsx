@@ -33,7 +33,7 @@ export default async function ExperienceDetailPage({
           {/* Back button */}
           <Link
             href="/#experience"
-            className="inline-flex items-center gap-2 text-sm text-[var(--text-muted)] hover:text-[var(--accent)] transition-colors mb-10 group"
+            className="inline-flex items-center gap-2 text-sm text-text-muted hover:text-accent transition-colors mb-10 group"
           >
             <HiArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
             Back to Experience
@@ -42,27 +42,27 @@ export default async function ExperienceDetailPage({
           {/* Header card */}
           <div className="card mb-8 relative overflow-hidden">
             {/* Background glow */}
-            <div className="absolute top-0 right-0 w-48 h-48 bg-[var(--glow-primary)] rounded-full blur-3xl" />
+            <div className="absolute top-0 right-0 w-48 h-48 bg-glow-primary rounded-full blur-3xl" />
 
             <div className="relative">
               <span className="eyebrow block mb-4">Work Experience</span>
-              <h1 className="text-3xl md:text-4xl font-bold font-[family-name:var(--font-display)] text-[var(--text)] mb-3 leading-tight">
+              <h1 className="text-3xl md:text-4xl font-bold font-display text-text mb-3 leading-tight">
                 {experience.role}
               </h1>
-              <p className="text-xl font-semibold text-[var(--accent)] mb-5">
+              <p className="text-xl font-semibold text-accent mb-5">
                 {experience.company}
               </p>
 
               <div className="flex flex-wrap gap-3">
-                <div className="flex items-center gap-2 text-[var(--text-secondary)] text-sm">
-                  <HiCalendar size={15} className="text-[var(--text-muted)]" />
+                <div className="flex items-center gap-2 text-text-secondary text-sm">
+                  <HiCalendar size={15} className="text-text-muted" />
                   <span>
                     {formatDate(experience.startDate)} —{' '}
                     {experience.endDate ? formatDate(experience.endDate) : 'Present'}
                   </span>
                 </div>
-                <div className="flex items-center gap-2 text-[var(--text-secondary)] text-sm">
-                  <HiBriefcase size={15} className="text-[var(--text-muted)]" />
+                <div className="flex items-center gap-2 text-text-secondary text-sm">
+                  <HiBriefcase size={15} className="text-text-muted" />
                   <span>{experience.company}</span>
                 </div>
               </div>
@@ -71,23 +71,23 @@ export default async function ExperienceDetailPage({
 
           {/* Summary */}
           <div className="card mb-6">
-            <h2 className="text-sm font-bold text-[var(--text-muted)] uppercase tracking-widest mb-3">Summary</h2>
-            <p className="text-[var(--text-secondary)] leading-relaxed">
+            <h2 className="text-sm font-bold text-text-muted uppercase tracking-widest mb-3">Summary</h2>
+            <p className="text-text-secondary leading-relaxed">
               {experience.summary}
             </p>
           </div>
 
           {/* Full description */}
           <div className="card mb-6">
-            <h2 className="text-sm font-bold text-[var(--text-muted)] uppercase tracking-widest mb-3">Description</h2>
-            <p className="text-[var(--text-secondary)] leading-relaxed whitespace-pre-line">
+            <h2 className="text-sm font-bold text-text-muted uppercase tracking-widest mb-3">Description</h2>
+            <p className="text-text-secondary leading-relaxed whitespace-pre-line">
               {experience.description}
             </p>
           </div>
 
           {/* Tech stack */}
           <div className="card">
-            <h2 className="text-sm font-bold text-[var(--text-muted)] uppercase tracking-widest mb-4">Technologies</h2>
+            <h2 className="text-sm font-bold text-text-muted uppercase tracking-widest mb-4">Technologies</h2>
             <div className="flex flex-wrap gap-2">
               {experience.techStack.map((tech) => (
                 <span key={tech} className="badge badge-primary">

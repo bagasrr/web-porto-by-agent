@@ -51,10 +51,24 @@ export function ProjectModal({
         />
 
         <FormTextarea
+          id="modal-proj-short-desc"
+          label="Short Description (shown on homepage card)"
+          rows={2}
+          maxLength={150}
+          showCount
+          placeholder="Brief 1-2 sentence overview displayed on the portfolio grid card..."
+          value={project.shortDescription || ''}
+          onChange={(e) =>
+            onChange((p) => (p ? { ...p, shortDescription: e.target.value } : null))
+          }
+          helperText="Max 150 characters — displayed in full on the homepage card."
+        />
+
+        <FormTextarea
           id="modal-proj-desc"
-          label="Description"
-          rows={3}
-          placeholder="What does this project do and what problem does it solve?"
+          label="Full / Long Description (shown on detail page)"
+          rows={4}
+          placeholder="Comprehensive breakdown of features, architecture, technical challenges, and achievements..."
           value={project.description || ''}
           onChange={(e) =>
             onChange((p) => (p ? { ...p, description: e.target.value } : null))
@@ -137,7 +151,7 @@ export function ProjectModal({
         </div>
 
         {/* Modal Footer */}
-        <div className="flex items-center justify-end gap-3 pt-4 border-t border-[var(--border-color)]">
+        <div className="flex items-center justify-end gap-3 pt-4 border-t border-border">
           <Button type="button" variant="secondary" onClick={onClose}>
             Cancel
           </Button>

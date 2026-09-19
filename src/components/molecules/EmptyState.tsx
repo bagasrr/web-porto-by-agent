@@ -18,9 +18,9 @@ export function EmptyState({
   onAction,
 }: EmptyStateProps) {
   return (
-    <div className="text-center py-12 px-4 rounded-xl border border-dashed border-[var(--border-color)] bg-[var(--surface-elevated)] text-[var(--text-muted)]">
-      <Icon size={36} className="mx-auto mb-3 opacity-40 text-[var(--accent)]" />
-      <p className="font-semibold text-[var(--text)] mb-1">{title}</p>
+    <div className="text-center py-12 px-4 rounded-xl border border-dashed border-border bg-surface-elevated text-text-muted">
+      <Icon size={36} className="mx-auto mb-3 opacity-40 text-accent" />
+      <p className="font-semibold text-text mb-1">{title}</p>
       <p className="text-xs mb-4">{description}</p>
       {actionLabel && onAction && (
         <Button

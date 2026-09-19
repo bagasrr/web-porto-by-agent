@@ -8,16 +8,22 @@
     "summary": "Fullstack Dev",
     "description": "Led the modernization of legacy enterprise services by upgrading backend services from legacy .NET (v1.0/2.0) to modern .NET, improving application maintainability, performance, and overall system security.\n\nOrchestrated large-scale database and workflow migrations, transitioning legacy batch management workflows (BMW) to Apache Airflow to streamline automated data transfer pipelines and scheduled operations.\n\nArchitected backend decoupling strategies using Golang and C# .NET to support database splitting initiatives, refactoring monolithic data access layers to handle multi-database connections and distributed transactional integrity.\n\nResolved critical UAT defects and supported interface stability across legacy and modern services using React for frontend adjustments and end-to-end integration.\n\nDrove the software delivery lifecycle from migration design, cross-system refactoring, and integration testing through to deployment staging.",
     "techStack": [
-      "React",
-      "Golang",
       "Dotnet",
       "Airflow",
       "MSSQL",
-      "Kibana"
+      "Golang",
+      "React",
+      "Kibana",
+      "EPV",
+      "Consul",
+      "Kubernetes",
+      "Docker",
+      "Jira",
+      "Confluence"
     ],
     "order": 0,
     "createdAt": "2026-08-31T14:41:15.360Z",
-    "updatedAt": "2026-09-19T00:22:25.467Z"
+    "updatedAt": "2026-09-19T01:00:05.239Z"
   },
   {
     "id": 5,

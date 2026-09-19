@@ -56,11 +56,11 @@ export function CvExtractedModal({
       onClick={onClose}
     >
       <div
-        className="card max-w-2xl w-full max-h-[90vh] overflow-y-auto bg-[var(--bg-secondary)] border border-[var(--accent-border)] shadow-2xl p-6"
+        className="card max-w-2xl w-full max-h-[90vh] overflow-y-auto bg-bg-secondary border border-accent-border shadow-2xl p-6"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between mb-4">
-          <h3 className="font-bold text-[var(--text)]">CV Data Extracted!</h3>
+          <h3 className="font-bold text-text">CV Data Extracted!</h3>
           <button
             type="button"
             onClick={onClose}
@@ -70,41 +70,41 @@ export function CvExtractedModal({
             <HiX size={16} />
           </button>
         </div>
-        <p className="text-sm text-[var(--text-secondary)] mb-6">
+        <p className="text-sm text-text-secondary mb-6">
           We found the following data in your CV. Would you like to apply it?
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 text-sm">
-          <div className="p-4 bg-[var(--surface-elevated)] rounded-xl space-y-2 border border-[var(--border-color)]">
+          <div className="p-4 bg-surface-elevated rounded-xl space-y-2 border border-border">
             <p className="eyebrow mb-2">Profile Data</p>
             {data.guessedName && (
               <div>
-                <span className="text-[var(--text-muted)]">Name:</span>{' '}
-                <span className="text-[var(--text)] font-medium">
+                <span className="text-text-muted">Name:</span>{' '}
+                <span className="text-text font-medium">
                   {data.guessedName}
                 </span>
               </div>
             )}
             {data.title && (
               <div>
-                <span className="text-[var(--text-muted)]">Title:</span>{' '}
-                <span className="text-[var(--text)] font-medium">
+                <span className="text-text-muted">Title:</span>{' '}
+                <span className="text-text font-medium">
                   {data.title}
                 </span>
               </div>
             )}
             {data.email && (
               <div>
-                <span className="text-[var(--text-muted)]">Email:</span>{' '}
-                <span className="text-[var(--text)] font-medium">
+                <span className="text-text-muted">Email:</span>{' '}
+                <span className="text-text font-medium">
                   {data.email}
                 </span>
               </div>
             )}
             {data.phone && (
               <div>
-                <span className="text-[var(--text-muted)]">Phone:</span>{' '}
-                <span className="text-[var(--text)] font-medium">
+                <span className="text-text-muted">Phone:</span>{' '}
+                <span className="text-text font-medium">
                   {data.phone}
                 </span>
               </div>
@@ -112,19 +112,19 @@ export function CvExtractedModal({
           </div>
 
           {data.experiences && data.experiences.length > 0 && (
-            <div className="p-4 bg-[var(--surface-elevated)] rounded-xl overflow-y-auto max-h-48 border border-[var(--border-color)]">
+            <div className="p-4 bg-surface-elevated rounded-xl overflow-y-auto max-h-48 border border-border">
               <p className="eyebrow mb-2">
                 Experience ({data.experiences.length})
               </p>
               {data.experiences.map((exp, i) => (
                 <div
                   key={i}
-                  className="mb-2 pb-2 border-b border-[var(--border-color)] last:border-0 text-sm"
+                  className="mb-2 pb-2 border-b border-border last:border-0 text-sm"
                 >
-                  <div className="font-semibold text-[var(--text)]">
+                  <div className="font-semibold text-text">
                     {exp.role} @ {exp.company}
                   </div>
-                  <div className="text-xs text-[var(--text-muted)]">
+                  <div className="text-xs text-text-muted">
                     {exp.startDate} — {exp.endDate || 'Present'}
                   </div>
                 </div>

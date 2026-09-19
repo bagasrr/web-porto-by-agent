@@ -120,14 +120,6 @@
     "updatedAt": "2026-09-05T09:53:47.816Z"
   },
   {
-    "id": 17,
-    "name": "ReactJS",
-    "imageUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/reactjs/reactjs-original.svg",
-    "order": 0,
-    "createdAt": "2026-09-19T00:13:58.651Z",
-    "updatedAt": "2026-09-19T00:13:58.651Z"
-  },
-  {
     "id": 18,
     "name": "Tailwind CSS",
     "imageUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tailwindcss/tailwindcss-original.svg",
@@ -144,22 +136,6 @@
     "updatedAt": "2026-09-19T00:15:43.381Z"
   },
   {
-    "id": 20,
-    "name": "Socket.io",
-    "imageUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/socketio/socketio-original.svg",
-    "order": 0,
-    "createdAt": "2026-09-19T00:15:47.952Z",
-    "updatedAt": "2026-09-19T00:15:47.952Z"
-  },
-  {
-    "id": 21,
-    "name": "MongoDB",
-    "imageUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mongodb/mongodb-original.svg",
-    "order": 0,
-    "createdAt": "2026-09-19T00:15:47.955Z",
-    "updatedAt": "2026-09-19T00:15:47.955Z"
-  },
-  {
     "id": 22,
     "name": "Express",
     "imageUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/express/express-original.svg",
@@ -168,59 +144,107 @@
     "updatedAt": "2026-09-19T00:15:52.344Z"
   },
   {
-    "id": 23,
-    "name": "JWT",
-    "imageUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/jwt/jwt-original.svg",
-    "order": 0,
-    "createdAt": "2026-09-19T00:15:52.349Z",
-    "updatedAt": "2026-09-19T00:15:52.349Z"
-  },
-  {
-    "id": 24,
-    "name": "Stripe",
-    "imageUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/stripe/stripe-original.svg",
-    "order": 0,
-    "createdAt": "2026-09-19T00:15:52.352Z",
-    "updatedAt": "2026-09-19T00:15:52.352Z"
-  },
-  {
-    "id": 25,
-    "name": "Golang",
-    "imageUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/golang/golang-original.svg",
-    "order": 0,
-    "createdAt": "2026-09-19T00:22:25.387Z",
-    "updatedAt": "2026-09-19T00:22:25.387Z"
-  },
-  {
-    "id": 26,
-    "name": "Dotnet",
-    "imageUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/dotnet/dotnet-original.svg",
-    "order": 0,
-    "createdAt": "2026-09-19T00:22:25.405Z",
-    "updatedAt": "2026-09-19T00:22:25.405Z"
-  },
-  {
-    "id": 27,
-    "name": "Airflow",
-    "imageUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/airflow/airflow-original.svg",
-    "order": 0,
-    "createdAt": "2026-09-19T00:22:25.407Z",
-    "updatedAt": "2026-09-19T00:22:25.407Z"
-  },
-  {
-    "id": 28,
-    "name": "MSSQL",
-    "imageUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mssql/mssql-original.svg",
-    "order": 0,
-    "createdAt": "2026-09-19T00:22:25.409Z",
-    "updatedAt": "2026-09-19T00:22:25.409Z"
-  },
-  {
     "id": 29,
     "name": "Kibana",
     "imageUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/kibana/kibana-original.svg",
     "order": 0,
     "createdAt": "2026-09-19T00:22:25.410Z",
     "updatedAt": "2026-09-19T00:22:25.410Z"
+  },
+  {
+    "id": 31,
+    "name": "Consul",
+    "imageUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/consul/consul-original.svg",
+    "order": 0,
+    "createdAt": "2026-09-19T01:00:05.178Z",
+    "updatedAt": "2026-09-19T01:00:05.178Z"
+  },
+  {
+    "id": 32,
+    "name": "Kubernetes",
+    "imageUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/kubernetes/kubernetes-original.svg",
+    "order": 0,
+    "createdAt": "2026-09-19T01:00:05.186Z",
+    "updatedAt": "2026-09-19T01:00:05.186Z"
+  },
+  {
+    "id": 33,
+    "name": "Docker",
+    "imageUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/docker/docker-original.svg",
+    "order": 0,
+    "createdAt": "2026-09-19T01:00:05.190Z",
+    "updatedAt": "2026-09-19T01:00:05.190Z"
+  },
+  {
+    "id": 34,
+    "name": "Jira",
+    "imageUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/jira/jira-original.svg",
+    "order": 0,
+    "createdAt": "2026-09-19T01:00:05.193Z",
+    "updatedAt": "2026-09-19T01:00:05.193Z"
+  },
+  {
+    "id": 35,
+    "name": "Confluence",
+    "imageUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/confluence/confluence-original.svg",
+    "order": 0,
+    "createdAt": "2026-09-19T01:00:05.195Z",
+    "updatedAt": "2026-09-19T01:00:05.195Z"
+  },
+  {
+    "id": 26,
+    "name": "Dotnet",
+    "imageUrl": "https://learn.microsoft.com/dotnet/media/dotnet-logo.png",
+    "order": 0,
+    "createdAt": "2026-09-19T00:22:25.405Z",
+    "updatedAt": "2026-09-19T01:07:56.131Z"
+  },
+  {
+    "id": 25,
+    "name": "Golang",
+    "imageUrl": "https://lenguajesdeprogramacion.net/wp-content/uploads/2020/03/golang-gopher.png",
+    "order": 0,
+    "createdAt": "2026-09-19T00:22:25.387Z",
+    "updatedAt": "2026-09-19T01:10:03.362Z"
+  },
+  {
+    "id": 27,
+    "name": "Airflow",
+    "imageUrl": "https://docs.nmaas.eu/nmaas-applications/tutorials/img/airflow-logo.png",
+    "order": 0,
+    "createdAt": "2026-09-19T00:22:25.407Z",
+    "updatedAt": "2026-09-19T01:11:18.086Z"
+  },
+  {
+    "id": 28,
+    "name": "MSSQL",
+    "imageUrl": "https://jepmoltho.github.io/jeppe-moelgaard.com/static/media/SSMS-v5.aa9072a3658a46b5215e.png",
+    "order": 0,
+    "createdAt": "2026-09-19T00:22:25.409Z",
+    "updatedAt": "2026-09-19T01:13:22.814Z"
+  },
+  {
+    "id": 30,
+    "name": "CyberArk EPV",
+    "imageUrl": "https://www.pikpng.com/pngl/b/273-2734688_cyberark-logo-cyberark-logo-transparent-clipart.png",
+    "order": 0,
+    "createdAt": "2026-09-19T01:00:05.110Z",
+    "updatedAt": "2026-09-19T01:16:06.069Z"
+  },
+  {
+    "id": 36,
+    "name": "NextJs",
+    "imageUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nextjs/nextjs-original.svg",
+    "order": 0,
+    "createdAt": "2026-09-19T01:19:26.079Z",
+    "updatedAt": "2026-09-19T01:19:26.079Z"
+  },
+  {
+    "id": 37,
+    "name": "Tailwind",
+    "imageUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tailwind/tailwind-original.svg",
+    "order": 0,
+    "createdAt": "2026-09-19T01:19:26.104Z",
+    "updatedAt": "2026-09-19T01:19:26.104Z"
   }
 ]

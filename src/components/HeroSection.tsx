@@ -1,6 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
-import { FaLinkedin, FaGithub, FaWhatsapp } from "react-icons/fa";
+import { FaLinkedin, FaWhatsapp } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
 import { HiArrowRight, HiDownload } from "react-icons/hi";
 import type { Profile } from "@/lib/data";
@@ -18,8 +17,8 @@ export default function HeroSection({ profile }: HeroProps) {
     <section className="relative min-h-screen flex items-center overflow-hidden bg-glow pt-16">
       {/* Background decorative elements */}
       <div className="absolute inset-0 pointer-events-none select-none" aria-hidden>
-        <div className="absolute top-1/4 right-0 w-[600px] h-[600px] bg-[var(--glow-primary)] rounded-full blur-[120px] opacity-40" />
-        <div className="absolute bottom-1/4 left-0 w-[400px] h-[400px] bg-[var(--glow-accent)] rounded-full blur-[100px] opacity-30" />
+        <div className="absolute top-1/4 right-0 w-[600px] h-[600px] bg-glow-primary rounded-full blur-[120px] opacity-40" />
+        <div className="absolute bottom-1/4 left-0 w-[400px] h-[400px] bg-glow-accent rounded-full blur-[100px] opacity-30" />
         {/* Grid lines */}
         <div
           className="absolute inset-0 opacity-[0.03]"
@@ -36,18 +35,18 @@ export default function HeroSection({ profile }: HeroProps) {
           <div className="order-2 lg:order-1 text-center lg:text-left">
             {/* Eyebrow */}
             <div className="inline-flex items-center gap-2 mb-6">
-              <span className="w-8 h-px bg-[var(--accent)]" />
+              <span className="w-8 h-px bg-accent" />
               <span className="eyebrow">{title}</span>
             </div>
 
             {/* Main heading */}
-            <h1 className="font-[family-name:var(--font-display)] font-bold leading-[1.1] tracking-tight mb-6">
-              <span className="block text-4xl sm:text-5xl lg:text-6xl xl:text-7xl text-[var(--text)]">{heroTitle}</span>
+            <h1 className="font-display font-bold leading-[1.1] tracking-tight mb-6">
+              <span className="block text-4xl sm:text-5xl lg:text-6xl xl:text-7xl text-text">{heroTitle}</span>
             </h1>
 
             {/* Name & intro */}
-            <p className="text-[var(--text-secondary)] text-lg md:text-xl mb-8 max-w-lg mx-auto lg:mx-0 leading-relaxed">
-              Hi, I&apos;m <span className="text-[var(--text)] font-semibold">{name}</span>. I craft performant, elegant digital experiences from front to back.
+            <p className="text-text-secondary text-lg md:text-xl mb-8 max-w-lg mx-auto lg:mx-0 leading-relaxed">
+              Hi, I&apos;m <span className="text-text font-semibold">{name}</span>. I craft performant, elegant digital experiences from front to back.
             </p>
 
             {/* CTAs */}
@@ -64,12 +63,12 @@ export default function HeroSection({ profile }: HeroProps) {
 
             {/* Social links */}
             <div className="flex items-center gap-4 justify-center lg:justify-start">
-              <span className="text-sm text-[var(--text-muted)] font-medium">Connect</span>
+              <span className="text-sm text-text-muted font-medium">Connect</span>
               <div className="flex items-center gap-2">
                 {profile?.email && (
                   <a
                     href={`mailto:${profile.email}`}
-                    className="w-9 h-9 flex items-center justify-center rounded-lg text-[var(--text-muted)] hover:text-[var(--accent)] hover:bg-[var(--surface)] border border-[var(--border-color)] hover:border-[var(--accent-border)] transition-all"
+                    className="w-9 h-9 flex items-center justify-center rounded-lg text-text-muted hover:text-accent hover:bg-surface border border-border hover:border-accent-border transition-all"
                     title="Email"
                     aria-label="Send email"
                   >
@@ -81,7 +80,7 @@ export default function HeroSection({ profile }: HeroProps) {
                     href={profile.linkedin}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-9 h-9 flex items-center justify-center rounded-lg text-[var(--text-muted)] hover:text-[var(--accent)] hover:bg-[var(--surface)] border border-[var(--border-color)] hover:border-[var(--accent-border)] transition-all"
+                    className="w-9 h-9 flex items-center justify-center rounded-lg text-text-muted hover:text-accent hover:bg-surface border border-border hover:border-accent-border transition-all"
                     title="LinkedIn"
                     aria-label="LinkedIn profile"
                   >
@@ -93,7 +92,7 @@ export default function HeroSection({ profile }: HeroProps) {
                     href={`https://wa.me/${profile.whatsapp}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-9 h-9 flex items-center justify-center rounded-lg text-[var(--text-muted)] hover:text-[var(--accent)] hover:bg-[var(--surface)] border border-[var(--border-color)] hover:border-[var(--accent-border)] transition-all"
+                    className="w-9 h-9 flex items-center justify-center rounded-lg text-text-muted hover:text-accent hover:bg-surface border border-border hover:border-accent-border transition-all"
                     title="WhatsApp"
                     aria-label="WhatsApp"
                   >
@@ -108,14 +107,14 @@ export default function HeroSection({ profile }: HeroProps) {
           <div className="order-1 lg:order-2 flex justify-center lg:justify-end">
             <div className="relative">
               {/* Glow ring */}
-              <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[var(--primary)] to-[var(--accent)] opacity-30 blur-2xl scale-110" />
+              <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary to-accent opacity-30 blur-2xl scale-110" />
 
               {/* FRAME UTAMA (Border background) */}
               <div className="relative w-64 h-64 md:w-80 md:h-80 lg:w-96 lg:h-96 rounded-2xl border border-accent-border shadow-2xl">
                 {/* 1. LAYER DALAM: Terpotong rapi di dalam rounded border */}
                 <div className="absolute inset-0 rounded-2xl overflow-hidden">
                   {/* Background Gradient / Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-[var(--bg)]/60 via-transparent to-transparent z-10" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-bg/60 via-transparent to-transparent z-10" />
 
                   {/* Foto badan bawah */}
                   <div className="absolute inset-x-0 bottom-0 h-[125%] origin-bottom">
@@ -131,18 +130,18 @@ export default function HeroSection({ profile }: HeroProps) {
               </div>
 
               {/* Floating badge */}
-              <div className="absolute -bottom-4 -left-4 card px-4 py-2 bg-[var(--surface-elevated)] border border-[var(--accent-border)] z-30">
-                <span className="text-xs text-[var(--text-muted)] block">Available for</span>
-                <span className="text-sm font-semibold text-[var(--success)]">● Freelance / Full-time</span>
+              <div className="absolute -bottom-4 -left-4 card px-4 py-2 bg-surface-elevated border border-accent-border z-30">
+                <span className="text-xs text-text-muted block">Available for</span>
+                <span className="text-sm font-semibold text-success">● Freelance / Full-time</span>
               </div>
             </div>
           </div>
         </div>
 
         {/* Scroll indicator */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 hidden lg:flex flex-col items-center gap-2 text-[var(--text-muted)]">
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 hidden lg:flex flex-col items-center gap-2 text-text-muted">
           <span className="text-xs font-medium uppercase tracking-widest">Scroll</span>
-          <div className="w-px h-12 bg-gradient-to-b from-[var(--text-muted)] to-transparent" />
+          <div className="w-px h-12 bg-gradient-to-b from-text-muted to-transparent" />
         </div>
       </div>
     </section>

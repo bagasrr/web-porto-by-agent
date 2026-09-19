@@ -11,6 +11,7 @@ import {
   ProjectSection,
   ProjectModal,
   TechStackSection,
+  TechStackModal,
   CvExtractedModal,
 } from '@/components/organisms'
 import { AdminDashboardTemplate } from '@/components/templates'
@@ -102,6 +103,7 @@ export default function AdminDashboard(props: AdminDashboardProps) {
             setEditingProj({
               id: 0,
               title: '',
+              shortDescription: '',
               description: '',
               techStack: [],
               githubUrl: '',
@@ -117,8 +119,7 @@ export default function AdminDashboard(props: AdminDashboardProps) {
       techStackSection={
         <TechStackSection
           techStacks={techStacks}
-          editingTech={editingTech}
-          onStartAdd={() =>
+          onAdd={() =>
             setEditingTech({
               id: 0,
               name: '',
@@ -126,12 +127,8 @@ export default function AdminDashboard(props: AdminDashboardProps) {
               order: techStacks.length + 1,
             })
           }
-          onStartEdit={setEditingTech}
-          onCancelEdit={() => setEditingTech(null)}
-          onSubmit={saveTechStack}
-          onChange={setEditingTech}
+          onEdit={setEditingTech}
           onDelete={(id) => setDeletingId(`techstack_${id}`)}
-          saving={saving}
         />
       }
       modals={
@@ -150,6 +147,14 @@ export default function AdminDashboard(props: AdminDashboardProps) {
             onClose={() => setEditingProj(null)}
             onSubmit={saveProject}
             onChange={setEditingProj}
+            saving={saving}
+          />
+          <TechStackModal
+            isOpen={Boolean(editingTech)}
+            tech={editingTech}
+            onClose={() => setEditingTech(null)}
+            onSubmit={saveTechStack}
+            onChange={setEditingTech}
             saving={saving}
           />
           {deletingId && (

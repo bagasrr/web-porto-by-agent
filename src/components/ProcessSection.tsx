@@ -38,37 +38,37 @@ export default function ProcessSection() {
         {/* Header */}
         <div className="text-center mb-16">
           <p className="eyebrow mb-3">How I Work</p>
-          <h2 className="text-3xl md:text-5xl font-bold font-[family-name:var(--font-display)] text-[var(--text)] leading-tight">
+          <h2 className="text-3xl md:text-5xl font-bold font-display text-text leading-tight">
             My{' '}
             <span className="text-gradient">Process</span>
           </h2>
-          <p className="text-[var(--text-secondary)] mt-4 max-w-lg mx-auto">
+          <p className="text-text-secondary mt-4 max-w-lg mx-auto">
             A proven workflow built to deliver quality results efficiently and transparently.
           </p>
         </div>
 
         {/* Steps */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-[var(--border-color)]">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-border">
           {STEPS.map((step, i) => (
             <div
               key={step.num}
-              className="bg-[var(--bg)] p-8 group hover:bg-[var(--surface)] transition-colors relative"
+              className="bg-bg p-8 group hover:bg-surface transition-colors relative"
             >
               {/* Connector line (right edge) */}
               {i < STEPS.length - 1 && (
-                <div className="absolute top-8 right-0 w-px h-8 bg-[var(--border-color)] lg:hidden" />
+                <div className="absolute top-8 right-0 w-px h-8 bg-border lg:hidden" />
               )}
 
               <span className="eyebrow block mb-3">{step.num}</span>
-              <h3 className="text-xl font-bold font-[family-name:var(--font-display)] text-[var(--text)] mb-3 group-hover:text-[var(--accent)] transition-colors">
+              <h3 className="text-xl font-bold font-display text-text mb-3 group-hover:text-accent transition-colors">
                 {step.title}
               </h3>
-              <p className="text-[var(--text-secondary)] text-sm leading-relaxed">
+              <p className="text-text-secondary text-sm leading-relaxed">
                 {step.desc}
               </p>
 
               {/* Subtle corner accent */}
-              <div className="absolute bottom-4 right-4 w-2 h-2 rounded-full bg-[var(--primary)] opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div className="absolute bottom-4 right-4 w-2 h-2 rounded-full bg-primary opacity-0 group-hover:opacity-100 transition-opacity" />
             </div>
           ))}
         </div>
