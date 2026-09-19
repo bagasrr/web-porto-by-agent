@@ -238,5 +238,13 @@
     "order": 0,
     "createdAt": "2026-09-19T01:19:26.079Z",
     "updatedAt": "2026-09-19T01:19:26.079Z"
+  },
+  {
+    "id": 38,
+    "name": "Tailwind",
+    "imageUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tailwind/tailwind-original.svg",
+    "order": 0,
+    "createdAt": "2026-09-19T07:28:47.095Z",
+    "updatedAt": "2026-09-19T07:28:47.095Z"
   }
 ]

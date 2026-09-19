@@ -10,11 +10,11 @@
       "Prisma"
     ],
     "githubUrl": null,
-    "demoUrl": null,
+    "demoUrl": "https://kanjipaham.vercel.app",
     "imageUrl": "/images/KanjiPahamLogo.png",
     "order": 1,
     "createdAt": "2026-09-19T01:19:26.178Z",
-    "updatedAt": "2026-09-19T01:41:11.248Z"
+    "updatedAt": "2026-09-19T07:28:47.200Z"
   },
   {
     "id": 7,

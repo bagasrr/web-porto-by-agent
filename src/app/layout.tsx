@@ -20,6 +20,13 @@ const spaceGrotesk = Space_Grotesk({
 export const metadata: Metadata = {
   title: "Bagas Ramadhan Rusnadi | Software Engineer",
   description: "Personal portfolio of Bagas Ramadhan Rusnadi — Software Engineer specializing in full-stack web development.",
+  icons: {
+    icon: [
+      { url: "/favicon.png", sizes: "32x32", type: "image/png" },
+      { url: "/assets/logo.png", type: "image/png" },
+    ],
+    apple: "/apple-icon.png",
+  },
   openGraph: {
     title: "Bagas Ramadhan Rusnadi | Software Engineer",
     description: "Personal portfolio of Bagas Ramadhan Rusnadi — Software Engineer specializing in full-stack web development.",
