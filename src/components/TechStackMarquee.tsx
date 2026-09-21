@@ -43,7 +43,7 @@ export default function SkillsSection({ techStacks }: SkillsSectionProps) {
         </div>
 
         {/* Marquee reverse */}
-        <div className="relative w-full overflow-hidden border-y border-border bg-(--surface) py-6 mt-5">
+        <div className="hidden md:block relative w-full overflow-hidden border-y border-border bg-(--surface) py-6 mt-5">
           {/* Fade masks */}
           <div className="absolute left-0 top-0 bottom-0 w-20 bg-linear-to-r from-(--surface) to-transparent z-10 pointer-events-none" />
           <div className="absolute right-0 top-0 bottom-0 w-20 bg-linear-to-l from-(--surface) to-transparent z-10 pointer-events-none" />
@@ -77,7 +77,7 @@ export default function SkillsSection({ techStacks }: SkillsSectionProps) {
         </div>
       </div> */}
 
-        <div className="absolute left-0 -bottom-13 z-20 pointer-events-none w-56 sm:w-96 md:w-120 lg:w-95 aspect-4/3">
+        <div className="absolute left-0 -bottom-13 z-20 pointer-events-none w-56 sm:w-72 md:w-80 lg:w-95 aspect-4/3">
           {/* Shadow Halus di belakang punggung & laptop */}
           <div className="absolute left-0 inset-y-0 w-3/4 bg-linear-to-l from-transparent via-(--bg)/90 to-(--bg) blur-2xl -z-10 translate-x-10" />
 

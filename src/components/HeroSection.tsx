@@ -14,7 +14,7 @@ export default function HeroSection({ profile }: HeroProps) {
   const heroTitle = profile?.heroTitle || "I Build Things For The Web.";
 
   return (
-    <section className="relative min-h-screen flex items-center overflow-hidden bg-glow pt-16">
+    <section className="relative  min-h-screen flex items-center overflow-hidden bg-glow pt-24 md:pt-16">
       {/* Background decorative elements */}
       <div className="absolute inset-0 pointer-events-none select-none" aria-hidden>
         <div className="absolute top-1/4 right-0 w-[600px] h-[600px] bg-glow-primary rounded-full blur-[120px] opacity-40" />
